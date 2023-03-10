@@ -112,7 +112,6 @@ app.post(
 	performOCR,
 	performGPT,
 	(req, res) => {
-		//console.log(req.body.text);
 		res.json(req.body.text);
 	}
 );
