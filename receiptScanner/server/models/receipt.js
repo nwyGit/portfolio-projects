@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const receiptSchema = new Schema({
+export const receiptSchema = new Schema({
 	merchant: {
 		type: String,
 		required: true,
@@ -38,5 +38,3 @@ const receiptSchema = new Schema({
 		required: true,
 	},
 });
-
-export const Receipt = mongoose.model('Receipt', receiptSchema);
