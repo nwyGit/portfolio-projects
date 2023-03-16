@@ -8,6 +8,7 @@ import { passport, authenticate } from './middleware/auth.js';
 import { connectToDB } from './utils/db.js';
 import receiptScannerRoute from './routes/receipt-scanner.js';
 import userServiceRoute from './routes/user-service.js';
+import receiptCRUDRoute from './routes/CRUD.js';
 
 /** CONFIGURATION */
 dotenv.config();
@@ -23,7 +24,8 @@ app.use(passport.initialize());
 
 /** ROUTES */
 app.use('/api/users', userServiceRoute);
-app.use('/api/receipt-scanner', authenticate, receiptScannerRoute);
+app.use('/api/receipt-scanner', receiptScannerRoute);
+app.use('/api/receipts', receiptCRUDRoute);
 
 /** SERVER SETUP */
 const PORT = process.env.PORT || 3000;

@@ -61,7 +61,7 @@ const performOCR = async (req, res, next) => {
 			const [result] = await client.textDetection(
 				`gs://${bucket.name}/${blob.name}`
 			);
-			req.publicUrl = publicUrl;
+			req.body.publicUrl = publicUrl;
 			req.body.text = result.fullTextAnnotation.text.split('\n');
 			next();
 		});
@@ -75,7 +75,7 @@ const performOCR = async (req, res, next) => {
 /** OPEN AI MIDDLEWARE */
 const performGPT = async (req, res, next) => {
 	try {
-		const { text } = req.body;
+		const { text, publicUrl } = req.body;
 		const data = text.map((note) => '  ' + note + ',\n').toString();
 		const response = await openai.createCompletion({
 			model: 'text-davinci-003',
@@ -86,10 +86,11 @@ const performGPT = async (req, res, next) => {
 			frequency_penalty: 0,
 			presence_penalty: 0,
 		});
-		const result = response.data.choices[0].text.slice(
+		const filteredData = response.data.choices[0].text.slice(
 			response.data.choices[0].text.indexOf('{') - 1
 		);
-		result.imageURL = req.publicUrl;
+		const result = JSON.parse(filteredData);
+		result.imageURL = publicUrl;
 		req.body = result;
 		next();
 	} catch (err) {
@@ -105,7 +106,7 @@ router.post(
 	performOCR,
 	performGPT,
 	(req, res) => {
-		res.status(200).json(result);
+		res.status(200).json(req.body);
 	}
 );
 

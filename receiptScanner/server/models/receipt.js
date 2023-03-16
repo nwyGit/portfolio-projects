@@ -9,6 +9,22 @@ export const receiptSchema = new Schema({
 	},
 	category: {
 		type: String,
+		enum: [
+			'Food and Dining',
+			'Transportation',
+			'Housing and Utilities',
+			'Entertainment and Leisure',
+			'Shopping',
+			'Health and Wellness',
+			'Personal Care and Beauty',
+			'Travel and Vacation',
+			'Education and Learning',
+			'Technology and Electronics',
+			'Gifts and Donations',
+			'Home and Garden',
+			'Finances and Fees',
+			'Other',
+		],
 		required: true,
 	},
 	date: {
@@ -22,6 +38,7 @@ export const receiptSchema = new Schema({
 	},
 	paymentMethod: {
 		type: String,
+		enum: ['Cash', 'Credit Card', 'Debit Card', 'Check', 'Other'],
 		required: true,
 	},
 	amount: {
@@ -30,6 +47,10 @@ export const receiptSchema = new Schema({
 	},
 	items: {
 		type: [String],
+		required: true,
+	},
+	imageURL: {
+		type: String,
 		required: true,
 	},
 	user: {
