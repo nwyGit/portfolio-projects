@@ -2,12 +2,14 @@ import React, { useContext } from 'react';
 import { Box, IconButton, useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '@/styles/theme';
 import InputBase from '@mui/material/InputBase';
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import {
+	LightModeOutlined,
+	DarkModeOutlined,
+	NotificationsOutlined,
+	SettingsOutlined,
+	PersonOutlined,
+	MenuOutlined,
+} from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAtom } from 'jotai';
 import { isCollapsedAtom } from '@/state';
@@ -31,7 +33,7 @@ const TopBar = () => {
 										setIsCollapsed(!isCollapsed);
 									}}
 								>
-									<MenuOutlinedIcon />
+									<MenuOutlined />
 								</IconButton>
 							</Box>
 						</>
@@ -53,19 +55,19 @@ const TopBar = () => {
 				<Box>
 					<IconButton onClick={colorMode.toggleColorMode}>
 						{theme.palette.mode === 'dark' ? (
-							<LightModeOutlinedIcon />
+							<LightModeOutlined />
 						) : (
-							<DarkModeOutlinedIcon />
+							<DarkModeOutlined />
 						)}
 					</IconButton>
 					<IconButton>
-						<NotificationsOutlinedIcon />
+						<NotificationsOutlined />
 					</IconButton>
 					<IconButton>
-						<SettingsOutlinedIcon />
+						<SettingsOutlined />
 					</IconButton>
 					<IconButton>
-						<PersonOutlinedIcon />
+						<PersonOutlined />
 					</IconButton>
 				</Box>
 			</Box>
