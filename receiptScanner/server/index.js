@@ -24,8 +24,8 @@ app.use(passport.initialize());
 
 /** ROUTES */
 app.use('/api/users', userServiceRoute);
-app.use('/api/receipt-scanner', receiptScannerRoute);
-app.use('/api/receipts', receiptCRUDRoute);
+app.use('/api/receipt-scanner', authenticate, receiptScannerRoute);
+app.use('/api/receipts', authenticate, receiptCRUDRoute);
 
 /** SERVER SETUP */
 const PORT = process.env.PORT || 3000;
