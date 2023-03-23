@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import axios from 'axios';
 import Link from 'next/link';
 import {
 	Box,
@@ -11,43 +12,45 @@ import {
 	useTheme,
 } from '@mui/material';
 import { Facebook, GitHub, Google, Twitter } from '@mui/icons-material';
-import {
-	Controller,
-	FormProvider,
-	useForm,
-	useFormContext,
-} from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { tokens } from '@/styles/theme';
 import styles from '@/styles';
 import FormInputPassword from '../form-components/FormInputPassword';
 import FormInputText from '../form-components/FormInputText';
-
-
+import { useRouter } from 'next/router';
 
 const RegisterForm = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [password2, setPassword2] = useState('');
-
 	const reactHookFormMethods = useForm();
 	const { handleSubmit } = reactHookFormMethods;
 
+	const router = useRouter();
+
 	const onSubmit = async (data) => {
-		console.log(data);
 		try {
-			const response = await axios.post(
-				`${process.env.NEXT_PUBLIC_API_URL}/users`,
+			const registerResponse = await axios.post(
+				`${process.env.NEXT_PUBLIC_API_URL}/users/register`,
 				data
 			);
-			return response.data;
+
+			if (registerResponse.status === 200) {
+				const { email, password } = data;
+
+				const loginResponse = await axios.post(
+					`${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+					{ email, password }
+				);
+
+				if (loginResponse.status === 200) {
+					router.push('/dashboard');
+				}
+			}
+
+			return registerResponse.data;
 		} catch (err) {
-			throw new Error('Failed to create receipt.');
+			throw new Error('Failed to create an account');
 		}
 	};
 
@@ -95,7 +98,6 @@ const RegisterForm = () => {
 										gap: 2,
 									}}
 								>
-									
 									<FormInputText name='firstName' label='First Name' />
 									<FormInputText name='lastName' label='Last Name' />
 								</Box>

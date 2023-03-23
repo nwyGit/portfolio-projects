@@ -1,14 +1,17 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 import { Box, Button, Typography, useTheme } from '@mui/material';
+import { AddBoxRounded } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
+import Header from './content/Header';
 import { tokens } from '../styles/theme';
 import { mockDataRecord } from '../data/record';
-import { AddBoxRounded } from '@mui/icons-material';
-import Header from './Header';
+import { isStartToScanAtom } from '@/state';
 
 const Record = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
+	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
 	const columns = Object.keys(mockDataRecord[2])
 		.filter((key) => {
 			return key !== 'items' && key !== 'imageURL' ? true : false;
@@ -46,7 +49,13 @@ const Record = () => {
 					title='Expense records'
 					subtitle='Managing your expense records'
 				/>
-				<Button variant='filled' endIcon={<AddBoxRounded />}>
+				<Button
+					variant='filled'
+					endIcon={<AddBoxRounded />}
+					onClick={() => {
+						setIsStartToScan(!isStartToScan);
+					}}
+				>
 					Add a record
 					<input hidden accept='image/*' multiple type='file' />
 				</Button>

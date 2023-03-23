@@ -33,7 +33,7 @@ const FormInputPassword = ({ name, label }) => {
 				name={name}
 				control={control}
 				rules={{ required: true }}
-				render={({ fieldState: { error } }) => (
+				render={({ field: { onChange }, fieldState: { error } }) => (
 					<>
 						<Box>
 							<FormControl fullWidth>
@@ -41,7 +41,10 @@ const FormInputPassword = ({ name, label }) => {
 								<OutlinedInput
 									label={label}
 									value={value}
-									onChange={(e) => setValue(e.target.value)}
+									onChange={(e) => {
+										setValue(e.target.value);
+										onChange(e.target.value);
+									}}
 									error={!!error}
 									type={showPassword ? 'text' : 'password'}
 									endAdornment={

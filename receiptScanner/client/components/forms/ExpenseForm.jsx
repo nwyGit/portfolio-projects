@@ -12,9 +12,17 @@ import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
 import { isEnterManuallyAtom, isStartToScanAtom } from '@/state';
 import styles from '@/styles';
-import { Box, Button, IconButton, useTheme } from '@mui/material';
+import {
+	Alert,
+	Box,
+	Button,
+	IconButton,
+	Typography,
+	useTheme,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { tokens } from '@/styles/theme';
+import { getToken } from '@/lib/authenticate';
 
 const ReceiptForm = ({ receiptData }) => {
 	const theme = useTheme();
@@ -23,6 +31,7 @@ const ReceiptForm = ({ receiptData }) => {
 	const [formData, setFormData] = useState(null);
 	const [isEnterManually, setIsEnterManually] = useAtom(isEnterManuallyAtom);
 	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
+	const [resMsg, setResMsg] = useState('');
 
 	const categories = [
 		'Food and Dining',
@@ -72,14 +81,23 @@ const ReceiptForm = ({ receiptData }) => {
 	const date = watch('date');
 
 	const onSubmit = async (data) => {
-		setIsEnterManually(!isEnterManually);
+		setTimeout(() => {
+			setIsEnterManually(!isEnterManually);
+			setIsStartToScan(!isStartToScan);
+		}, 5000);
+
 		try {
 			const response = await axios.post(
 				`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
-				data
+				data,
+				{
+					headers: {
+						Authorization: `JWT ${getToken()}`,
+						'Content-Type': 'application/json',
+					},
+				}
 			);
-			console.log(response.data);
-			return response.data;
+			setResMsg(response.data.message);
 		} catch (err) {
 			throw new Error('Failed to create receipt.');
 		}
@@ -105,6 +123,18 @@ const ReceiptForm = ({ receiptData }) => {
 
 	return (
 		<>
+			{resMsg && (
+				<>
+					<Alert
+						severity='success'
+						className={`absolute top-0 left-0 w-full z-10`}
+					>
+						<Typography variant='h6' sx={{ fontWeight: 600 }}>
+							{resMsg}
+						</Typography>
+					</Alert>
+				</>
+			)}
 			<Box className={`${styles.formCenter}`}>
 				<Box
 					sx={{ backgroundColor: colors.primary[200], borderRadius: '25px' }}

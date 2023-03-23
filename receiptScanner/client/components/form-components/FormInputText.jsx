@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import {
 	Box,
@@ -16,6 +16,8 @@ const FormInputText = ({ name, label }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
+	const [value, setValue] = useState('');
+
 	const { control } = useFormContext();
 
 	const rules =
@@ -31,15 +33,18 @@ const FormInputText = ({ name, label }) => {
 				name={name}
 				control={control}
 				rules={rules}
-				render={({ field: { onChange, value }, fieldState: { error } }) => (
+				render={({ field: { onChange }, fieldState: { error } }) => (
 					<>
 						<Box>
 							<FormControl fullWidth>
 								<InputLabel>{label}</InputLabel>
 								<OutlinedInput
 									label={label}
-									value={value ? '' : value}
-									onChange={onChange}
+									value={value}
+									onChange={(e) => {
+										setValue(e.target.value);
+										onChange(e.target.value);
+									}}
 									error={!!error}
 								/>
 							</FormControl>
