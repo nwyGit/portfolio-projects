@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export const userSchema = new Schema({
-	userName: {
+	username: {
 		type: String,
 		required: true,
 		unique: true,
@@ -17,8 +17,14 @@ export const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	firstName: String,
-	lastName: String,
+	firstName: {
+		type: String,
+		required: true,
+	},
+	lastName: {
+		type: String,
+		required: true,
+	},
 	receipts: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
