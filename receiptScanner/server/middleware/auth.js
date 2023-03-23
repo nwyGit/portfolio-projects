@@ -7,7 +7,7 @@ import { User } from '../utils/db.js';
 dotenv.config();
 
 const jwtOptions = {
-	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+	jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
 	secretOrKey: process.env.JWT_SECRET,
 };
 
@@ -17,7 +17,7 @@ const strategy = new Strategy(jwtOptions, async (jwt_payload, next) => {
 		if (user) {
 			const sanitizedUser = {
 				_id: user._id,
-				userName: user.userName,
+				userName: user.username,
 				email: user.email,
 			};
 			return next(null, sanitizedUser);
@@ -43,7 +43,7 @@ const authenticate = (req, res, next) => {
 };
 
 const generateToken = (user) => {
-	const payload = { _id: user._id, userName: user.userName, email: user.email };
+	const payload = { _id: user._id, username: user.username, email: user.email };
 	return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
