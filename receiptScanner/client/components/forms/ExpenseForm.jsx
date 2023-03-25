@@ -10,7 +10,11 @@ import { BsCalendar, BsList } from 'react-icons/bs';
 import { RiFileTextLine } from 'react-icons/ri';
 import { useForm } from 'react-hook-form';
 import { useAtom } from 'jotai';
-import { isEnterManuallyAtom, isStartToScanAtom } from '@/state';
+import {
+	isEnterManuallyAtom,
+	isStartToScanAtom,
+	isUpdateRecordAtom,
+} from '@/state';
 import styles from '@/styles';
 import {
 	Alert,
@@ -23,14 +27,17 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { tokens } from '@/styles/theme';
 import { getToken } from '@/lib/authenticate';
+import AlertMessage from '../image-components/AlertMessage';
 
-const ReceiptForm = ({ receiptData }) => {
+const ReceiptForm = ({ receiptData, action }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
 	const [formData, setFormData] = useState(null);
+	const [imageURL, setImageUrl] = useState('');
 	const [isEnterManually, setIsEnterManually] = useAtom(isEnterManuallyAtom);
 	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
+	const [, setIsUpdateRecord] = useAtom(isUpdateRecordAtom);
 	const [resMsg, setResMsg] = useState('');
 
 	const categories = [
@@ -72,6 +79,7 @@ const ReceiptForm = ({ receiptData }) => {
 	useEffect(() => {
 		setFormData(receiptData);
 		if (formData) {
+			setImageUrl(receiptData.imageURL);
 			Object.keys(formData).forEach((key) => {
 				setValue(key, formData[key]);
 			});
@@ -81,25 +89,47 @@ const ReceiptForm = ({ receiptData }) => {
 	const date = watch('date');
 
 	const onSubmit = async (data) => {
-		setTimeout(() => {
-			setIsEnterManually(!isEnterManually);
-			setIsStartToScan(!isStartToScan);
-		}, 5000);
-
-		try {
-			const response = await axios.post(
-				`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
-				data,
-				{
-					headers: {
-						Authorization: `JWT ${getToken()}`,
-						'Content-Type': 'application/json',
-					},
-				}
-			);
-			setResMsg(response.data.message);
-		} catch (err) {
-			throw new Error('Failed to create receipt.');
+		if (action === 'Create') {
+			try {
+				const response = await axios.post(
+					`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
+					data,
+					{
+						headers: {
+							Authorization: `JWT ${getToken()}`,
+							'Content-Type': 'application/json',
+						},
+					}
+				);
+				setResMsg(response.data.message);
+				setTimeout(() => {
+					setIsEnterManually(!isEnterManually);
+					setIsStartToScan(!isStartToScan);
+					window.location.reload();
+				}, 3000);
+			} catch (err) {
+				throw new Error('Failed to create receipt.');
+			}
+		} else if (action === 'Update') {
+			try {
+				const response = await axios.put(
+					`${process.env.NEXT_PUBLIC_API_URL}/receipts/${data._id}`,
+					data,
+					{
+						headers: {
+							Authorization: `JWT ${getToken()}`,
+							'Content-Type': 'application/json',
+						},
+					}
+				);
+				setResMsg(response.data.message);
+				setTimeout(() => {
+					setIsUpdateRecord(false);
+					window.location.reload();
+				}, 3000);
+			} catch (err) {
+				throw new Error('Failed to update receipt.');
+			}
 		}
 	};
 
@@ -123,29 +153,19 @@ const ReceiptForm = ({ receiptData }) => {
 
 	return (
 		<>
-			{resMsg && (
-				<>
-					<Alert
-						severity='success'
-						className={`absolute top-0 left-0 w-full z-10`}
-					>
-						<Typography variant='h6' sx={{ fontWeight: 600 }}>
-							{resMsg}
-						</Typography>
-					</Alert>
-				</>
-			)}
-			<Box className={`${styles.formCenter}`}>
+			{resMsg && <AlertMessage resMsg={resMsg} type='success' />}
+			<Box className={`${styles.elementCenter}`}>
 				<Box
 					sx={{ backgroundColor: colors.primary[200], borderRadius: '25px' }}
 					className={`${styles.expenseForm} overflow-hidden hover:overflow-auto overscroll-contain`}
 				>
 					<div className={`flex px-4 justify-between items-center`}>
-						<h1 className='text-2xl font-bold my-4'>Expense Details</h1>
+						<h1 className='text-2xl font-bold my-4'>{action} Expense</h1>
 						<IconButton
 							onClick={() => {
-								setIsStartToScan(!isStartToScan);
+								setIsStartToScan(false);
 								setIsEnterManually(false);
+								setIsUpdateRecord(false);
 							}}
 						>
 							<CloseIcon sx={{ fontSize: '2rem' }} />
@@ -157,9 +177,7 @@ const ReceiptForm = ({ receiptData }) => {
 							{formData && (
 								<div className={`${styles.flexCenter} px-4 pt-4`}>
 									<img
-										src={
-											'https://storage.googleapis.com/receipt_storage/37aa9786-3356-40b7-889b-00483674c08f-2.jpeg'
-										}
+										src={imageURL ? imageURL : ''}
 										alt='receipt image'
 										className='max-h-80'
 									/>
@@ -324,14 +342,14 @@ const ReceiptForm = ({ receiptData }) => {
 								variant='contained'
 								size='large'
 								style={{
-									backgroundColor: colors.primary[700],
+									backgroundColor: colors.orangeAccent[400],
 								}}
 								sx={{
 									color: colors.primary[100],
 									m: '2rem 0 0 0',
 								}}
 							>
-								Save
+								{action}
 							</Button>
 						</div>
 					</form>

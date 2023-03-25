@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-	Alert,
 	Box,
 	Button,
 	Card,
@@ -14,9 +12,11 @@ import {
 	useTheme,
 } from '@mui/material';
 import { Facebook, GitHub, Google, Twitter } from '@mui/icons-material';
+import { signIn } from 'next-auth/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInputText from '../form-components/FormInputText';
 import FormInputPassword from '../form-components/FormInputPassword';
+import AlertMessage from '../image-components/AlertMessage';
 import { authenticateUser } from '@/lib/authenticate';
 import { tokens } from '@/styles/theme';
 import styles from '@/styles';
@@ -38,7 +38,7 @@ const LoginForm = () => {
 			setResMsg(msg);
 			setTimeout(() => {
 				router.push('/dashboard');
-			}, 3000);
+			}, 2000);
 		} catch (err) {
 			setWarning(err.message);
 		}
@@ -46,7 +46,7 @@ const LoginForm = () => {
 
 	return (
 		<>
-			<Box className={`${styles.formCenter}`}>
+			<Box className={`${styles.elementCenter}`}>
 				<Card className={`${styles.logRegForm} z-5 rounded-xl`}>
 					<CardContent
 						sx={{
@@ -138,11 +138,8 @@ const LoginForm = () => {
 											<Twitter sx={{ color: '#1da1f2' }} />
 										</IconButton>
 									</Link>
-									<Link href='/' passHref legacyBehavior>
-										<IconButton
-											component='a'
-											onClick={(e) => e.preventDefault()}
-										>
+									<Link href='' passHref legacyBehavior>
+										<IconButton component='a' onClick={() => signIn('github')}>
 											<GitHub
 												sx={{
 													color: (theme) =>
@@ -167,30 +164,8 @@ const LoginForm = () => {
 					</CardContent>
 				</Card>
 			</Box>
-			{resMsg && (
-				<>
-					<Alert
-						severity='success'
-						className={`absolute top-0 left-0 w-full z-10`}
-					>
-						<Typography variant='h6' sx={{ fontWeight: 600 }}>
-							{resMsg}
-						</Typography>
-					</Alert>
-				</>
-			)}
-			{warning && (
-				<>
-					<Alert
-						severity='error'
-						className={`absolute top-0 left-0 w-full z-10`}
-					>
-						<Typography variant='h6' sx={{ fontWeight: 600 }}>
-							{warning}
-						</Typography>
-					</Alert>
-				</>
-			)}
+			{resMsg && <AlertMessage resMsg={resMsg} type='success' />}
+			{warning && <AlertMessage resMsg={warning} type='error' />}
 		</>
 	);
 };

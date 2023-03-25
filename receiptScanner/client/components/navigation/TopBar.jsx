@@ -1,5 +1,13 @@
-import React, { useContext } from 'react';
-import { Box, IconButton, useTheme } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import {
+	Box,
+	Divider,
+	IconButton,
+	ListItemIcon,
+	Menu,
+	MenuItem,
+	useTheme,
+} from '@mui/material';
 import { ColorModeContext, tokens } from '@/styles/theme';
 import InputBase from '@mui/material/InputBase';
 import {
@@ -9,19 +17,48 @@ import {
 	SettingsOutlined,
 	PersonOutlined,
 	MenuOutlined,
+	Logout,
 } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAtom } from 'jotai';
 import { isCollapsedAtom } from '@/state';
+import { readToken, removeToken } from '@/lib/authenticate';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import AlertMessage from '../image-components/AlertMessage';
 
 const TopBar = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 	const colorMode = useContext(ColorModeContext);
+
 	const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom);
+	const [resMsg, setResMsg] = useState('');
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+
+	const router = useRouter();
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const token = readToken();
+
+	const logout = async () => {
+		setResMsg('You have been successfully logged out.');
+		setTimeout(() => {
+			removeToken();
+			router.push('/');
+		}, 2000);
+	};
 
 	return (
 		<>
+			{resMsg && <AlertMessage resMsg={resMsg} type='info' />}
 			<Box display='flex' justifyContent='space-between' p={2}>
 				<Box display='flex'>
 					{isCollapsed && (
@@ -64,11 +101,35 @@ const TopBar = () => {
 						<NotificationsOutlined />
 					</IconButton>
 					<IconButton>
-						<SettingsOutlined />
+						<Link href='/settings' passHref legacyBehavior>
+							<SettingsOutlined />
+						</Link>
 					</IconButton>
-					<IconButton>
+					<IconButton
+						onClick={handleClick}
+						size='small'
+						aria-controls={open ? 'account-menu' : undefined}
+						aria-haspopup='true'
+						aria-expanded={open ? 'true' : undefined}
+					>
 						<PersonOutlined />
 					</IconButton>
+					<Menu
+						anchorEl={anchorEl}
+						id='account-menu'
+						open={open}
+						onClose={handleClose}
+						onClick={handleClose}
+						transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+						anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+					>
+						<MenuItem onClick={logout}>
+							<ListItemIcon>
+								<Logout />
+							</ListItemIcon>
+							Logout
+						</MenuItem>
+					</Menu>
 				</Box>
 			</Box>
 		</>

@@ -60,6 +60,17 @@ export const tokens = (mode) => ({
 					800: '#2a2d64',
 					900: '#151632',
 				},
+				orangeAccent: {
+					100: '#ffe8de',
+					200: '#ffd1be',
+					300: '#ffb99d',
+					400: '#ffa27d',
+					500: '#ff8b5c',
+					600: '#cc6f4a',
+					700: '#995337',
+					800: '#663825',
+					900: '#331c12',
+				},
 		  }
 		: {
 				grey: {
@@ -116,6 +127,17 @@ export const tokens = (mode) => ({
 					700: '#a4a9fc',
 					800: '#c3c6fd',
 					900: '#e1e2fe',
+				},
+				orangeAccent: {
+					100: '#331c12',
+					200: '#663825',
+					300: '#995337',
+					400: '#cc6f4a',
+					500: '#ff8b5c',
+					600: '#ffa27d',
+					700: '#ffb99d',
+					800: '#ffd1be',
+					900: '#ffe8de',
 				},
 		  }),
 });
@@ -190,11 +212,20 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-	const [mode, setMode] = useState('light');
+	const [mode, setMode] = useState(
+		typeof localStorage !== 'undefined'
+			? localStorage.getItem('mode') || 'light'
+			: 'light'
+	);
 	const colorMode = useMemo(
 		() => ({
-			toggleColorMode: () =>
-				setMode((prev) => (prev === 'light' ? 'dark' : 'light')),
+			toggleColorMode: () => {
+				setMode((prevMode) => {
+					const newMode = prevMode === 'light' ? 'dark' : 'light';
+					localStorage.setItem('mode', newMode);
+					return newMode;
+				});
+			},
 		}),
 		[]
 	);

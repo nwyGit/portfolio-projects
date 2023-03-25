@@ -56,7 +56,7 @@ const RegisterForm = () => {
 
 	return (
 		<>
-			<Box className={`${styles.formCenter}`}>
+			<Box className={`${styles.elementCenter}`}>
 				<Card className={`${styles.logRegForm} z-5 rounded-xl`}>
 					<CardContent
 						sx={{
@@ -164,7 +164,7 @@ const RegisterForm = () => {
 											<Twitter sx={{ color: '#1da1f2' }} />
 										</IconButton>
 									</Link>
-									<Link href='/' passHref legacyBehavior>
+									<Link href='/api/auth/signin/github' passHref legacyBehavior>
 										<IconButton
 											component='a'
 											onClick={(e) => e.preventDefault()}

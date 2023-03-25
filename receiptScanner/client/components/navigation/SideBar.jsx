@@ -20,18 +20,21 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import { tokens } from '../styles/theme';
+import { tokens } from '../../styles/theme';
 import styles from '@/styles/index';
+import Link from 'next/link';
 
 const Item = ({ title, to, icon }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 	return (
 		<ListItem style={{ color: colors.grey[100] }}>
-			<ListItemButton component='a' href={to}>
-				<ListItemIcon>{icon}</ListItemIcon>
-				<ListItemText primary={title} />
-			</ListItemButton>
+			<Link href={to} passHref legacyBehavior>
+				<ListItemButton>
+					<ListItemIcon>{icon}</ListItemIcon>
+					<ListItemText primary={title} />
+				</ListItemButton>
+			</Link>
 		</ListItem>
 	);
 };
@@ -51,8 +54,13 @@ const Sidebar = () => {
 					'& .MuiListItem-root': {
 						background: `${colors.primary[200]} !important`,
 					},
+					'& .MuiListItemIcon-root': {
+						minWidth: '40px',
+					},
 				}}
-				className={`${styles.sideBar} ${isCollapsed ? 'w-0' : 'w-1/5'}`}
+				className={`${styles.sideBar} ${
+					isCollapsed ? 'w-0' : 'w-1/6 min-w-[16rem]'
+				}`}
 			>
 				{!isCollapsed && (
 					<>
@@ -70,6 +78,7 @@ const Sidebar = () => {
 						<Box mb='25px'>
 							<Box className={`${styles.flexCenter}`}>
 								<Image
+									priority
 									src='/avatar.jpg'
 									alt='profile-user'
 									width={100}
@@ -83,7 +92,7 @@ const Sidebar = () => {
 									color={colors.grey[100]}
 									fontWeight='bold'
 								>
-									User Name
+									Demo
 								</Typography>
 								<Typography variant='h5' color={colors.greenAccent[400]}>
 									Basic Plan

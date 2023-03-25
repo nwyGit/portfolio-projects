@@ -4,7 +4,7 @@ import React from 'react';
 const UploadScan = (color) => {
 	return (
 		<SvgIcon
-			style={{ opacity: 0.3 }}
+			style={{ opacity: 0.3, fontSize: '15rem' }}
 			className='w-[80%] h-[80%]'
 			viewBox='0 0 32 32'
 		>
