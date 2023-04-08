@@ -30,10 +30,10 @@ const Navbar = () => {
 	};
 
 	return (
-		<Box sx={{ position: 'flex', zIndex: 5, width: 'screen' }}>
+		<Box sx={{ position: 'fixed', zIndex: 10, width: 'screen' }}>
 			<AppBar
 				sx={{
-					backgroundColor: 'transparent',
+					backgroundColor: `white`,
 					boxShadow: 'none',
 					p: '.5rem 1.5rem',
 				}}
@@ -48,7 +48,7 @@ const Navbar = () => {
 						variant='h5'
 						noWrap
 						component='a'
-						href=''
+						href='/'
 						sx={{
 							mr: 2,
 							display: { xs: 'flex', md: 'none' },

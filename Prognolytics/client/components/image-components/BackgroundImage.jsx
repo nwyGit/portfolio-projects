@@ -1,3 +1,4 @@
+import styles from '@/styles';
 import Image from 'next/image';
 import React from 'react';
 
@@ -8,9 +9,8 @@ const BackgroundImage = ({ ImageUrl, alt }) => {
 			alt={alt}
 			width={3840}
 			height={2160}
-			unoptimized
 			priority
-			className={`fixed top-0 left-0 min-h-[100%] w-auto`}
+			className={`absolute inset-0 h-screen w-screen object-cover opacity-50 lg:opacity-100`}
 		/>
 	);
 };
