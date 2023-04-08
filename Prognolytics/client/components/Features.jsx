@@ -23,49 +23,69 @@ const features = [
 const Features = () => {
 	return (
 		<>
-			<Box
-				id='features'
-				sx={{
-					display: { xs: 'block', sm: 'flex' },
-					justifyContent: 'space-around',
-					alignItems: 'center',
-					m: { xs: '10%', sm: '3%', xl: '1%' },
-				}}
-			>
-				{features.map((feature, index) => {
-					return (
-						<Card
-							key={index}
-							sx={{
-								borderRadius: '2rem',
-								marginTop: { xs: '3rem' },
-							}}
-							className={`${styles.cardSize}`}
-						>
-							<Image
-								src={`/${feature.image}.png`}
-								alt={feature.image}
-								width={1024}
-								height={1024}
-							/>
-							<CardContent
+			<Box id='features' sx={{ p: '2rem 0' }}>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'center',
+						alignItems: 'center',
+						textAlign: 'center',
+						m: '2rem 20%',
+					}}
+				>
+					<Typography variant='h2' component='h2' sx={{ fontWeight: 'bold' }}>
+						How we work
+					</Typography>
+					<Typography variant='h4' component='h4' sx={{ m: '2rem 0 0 0' }}>
+						Empowering Users Through Intelligent Tools: Our application combines
+						advanced technologies and personalized insights to help users
+						achieve their financial objectives efficiently and effectively.
+					</Typography>
+				</Box>
+				<Box
+					sx={{
+						display: { xs: 'block', sm: 'flex' },
+						justifyContent: 'space-around',
+						alignItems: 'center',
+						m: { xs: '10%', sm: '0 5%', xl: '1%' },
+					}}
+				>
+					{features.map((feature, index) => {
+						return (
+							<Card
+								key={index}
 								sx={{
-									minHeight: 210,
-									p: '1.5rem',
+									borderRadius: '2rem',
+									marginTop: { xs: '3rem' },
 								}}
+								className={`${styles.cardSize}`}
 							>
-								<Typography
-									variant='h3'
-									component='h3'
-									sx={{ fontWeight: 'bold', paddingBottom: '1.5rem' }}
+								<Image
+									src={`/${feature.image}.png`}
+									alt={feature.image}
+									width={1024}
+									height={1024}
+								/>
+								<CardContent
+									sx={{
+										minHeight: 210,
+										p: '1.5rem',
+									}}
 								>
-									{feature.title}
-								</Typography>
-								<Typography component='p'>{feature.body}</Typography>
-							</CardContent>
-						</Card>
-					);
-				})}
+									<Typography
+										variant='h3'
+										component='h3'
+										sx={{ fontWeight: 'bold', paddingBottom: '1.5rem' }}
+									>
+										{feature.title}
+									</Typography>
+									<Typography component='p'>{feature.body}</Typography>
+								</CardContent>
+							</Card>
+						);
+					})}
+				</Box>
 			</Box>
 		</>
 	);

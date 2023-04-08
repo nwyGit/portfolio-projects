@@ -14,7 +14,12 @@ import { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 
-const navItems = ['Features', 'Pricing', 'About Us', 'Contact Us'];
+const navItems = [
+	{ name: 'Features', path: 'features' },
+	{ name: 'Plans & Pricing', path: 'pricing' },
+	{ name: 'About Us', path: 'about' },
+	{ name: 'Contact Us', path: 'contact' },
+];
 
 const Navbar = () => {
 	const theme = useTheme();
@@ -97,9 +102,9 @@ const Navbar = () => {
 									<Typography
 										textAlign='center'
 										component='a'
-										href={`/#${page.toLowerCase()}`}
+										href={`/#${page.path}`}
 									>
-										{page}
+										{page.name}
 									</Typography>
 								</MenuItem>
 							))}
@@ -146,7 +151,7 @@ const Navbar = () => {
 								onClick={handleCloseNavMenu}
 								sx={{ mx: 4, my: 2, display: 'block', letterSpacing: '.05rem' }}
 							>
-								<Link href={`/#${page.toLowerCase()}`}>{page}</Link>
+								<Link href={`/#${page.path}`}>{page.name}</Link>
 							</Typography>
 						))}
 					</Box>

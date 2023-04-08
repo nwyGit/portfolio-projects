@@ -13,7 +13,7 @@ const styles = {
 	formInput: 'rounded-2xl p-4 pl-14 w-full text-background-color',
 	formInputPos: 'relative mt-4 px-4 w-full',
 
-	cardSize: 'md:max-w-[27%] w-[100%]',
+	cardSize: 'md:mx-10 w-[100%]',
 
 	button:
 		'border-2 text-black bg-secondary-contrast-text hover:bg-primary-contrast-text hover:text-white rounded-full',
