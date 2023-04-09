@@ -173,6 +173,7 @@ const Pricing = () => {
 														textAlign='center'
 														component='a'
 														href='/register'
+														sx={{ letterSpacing: '.05rem' }}
 													>
 														Select {tier.name.split(' ')[0]}
 													</Typography>

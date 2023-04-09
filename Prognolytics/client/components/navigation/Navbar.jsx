@@ -38,7 +38,7 @@ const Navbar = () => {
 		<Box sx={{ position: 'fixed', zIndex: 10, width: 'screen' }}>
 			<AppBar
 				sx={{
-					backgroundColor: `white`,
+					backgroundColor: 'white',
 					boxShadow: 'none',
 					p: '.5rem 1.5rem',
 				}}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { isCollapsedAtom } from '@/state';
@@ -7,7 +7,6 @@ import {
 	Divider,
 	IconButton,
 	List,
-	ListItem,
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
@@ -20,23 +19,51 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import HelpIcon from '@mui/icons-material/Help';
 import { tokens } from '../../styles/theme';
 import styles from '@/styles/index';
 import Link from 'next/link';
 import { readToken } from '@/lib/authenticate';
+import { useRouter } from 'next/router';
 
-const Item = ({ title, to, icon }) => {
+const Item = ({ label, to, icon }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
+
+	const router = useRouter();
+	const active = router.pathname === to;
+
 	return (
-		<ListItem style={{ color: colors.grey[100] }}>
-			<Link href={to} passHref legacyBehavior>
-				<ListItemButton>
-					<ListItemIcon>{icon}</ListItemIcon>
-					<ListItemText primary={title} />
-				</ListItemButton>
-			</Link>
-		</ListItem>
+		<Link href={to} legacyBehavior>
+			<ListItemButton
+				component='a'
+				style={{ color: colors.grey[100] }}
+				sx={{
+					m: '10px',
+					p: '10px 15px',
+				}}
+			>
+				<ListItemIcon
+					sx={{
+						color: active ? colors.orangeAccent[500] : '',
+					}}
+				>
+					{icon}
+				</ListItemIcon>
+				<ListItemText
+					primary={
+						<Typography
+							sx={{
+								color: active ? colors.orangeAccent[500] : '',
+								fontWeight: active ? 'bold' : '',
+							}}
+						>
+							{label}
+						</Typography>
+					}
+				/>
+			</ListItemButton>
+		</Link>
 	);
 };
 
@@ -50,13 +77,7 @@ const Sidebar = () => {
 			<Box
 				sx={{
 					'&.pro-sidebar-inner': {
-						background: `${colors.primary[200]} !important`,
-					},
-					'& .MuiListItem-root': {
-						background: `${colors.primary[200]} !important`,
-					},
-					'& .MuiListItemIcon-root': {
-						minWidth: '40px',
+						background: `${colors.primary[200]}`,
 					},
 				}}
 				className={`${styles.sideBar} ${
@@ -103,23 +124,38 @@ const Sidebar = () => {
 						{/** MENU ITEMS */}
 						<List sx={{ mx: 2 }}>
 							<Item
-								title='Dashboard'
+								label='Dashboard'
 								to='/dashboard'
 								icon={<DashboardIcon />}
 							/>
+							<Typography
+								variant='h6'
+								color={colors.grey[300]}
+								sx={{ m: '15px 0 5px 20px' }}
+							>
+								Data
+							</Typography>
 							<Item
-								title='Expense records'
+								label='Expense records'
 								to='/records'
 								icon={<ReceiptLongIcon />}
 							/>
-							<Item title='Reports' to='/reports' icon={<RequestQuoteIcon />} />
+							<Typography
+								variant='h6'
+								color={colors.grey[300]}
+								sx={{ m: '15px 0 5px 20px' }}
+							>
+								Charts
+							</Typography>
+							<Item label='Reports' to='/reports' icon={<RequestQuoteIcon />} />
 							<Item
-								title='Analytics'
+								label='Analytics'
 								to='/analytics'
 								icon={<AssessmentIcon />}
 							/>
 							<Divider />
-							<Item title='Settings' to='/settings' icon={<SettingsIcon />} />
+							<Item label='FAQ' to='/faq' icon={<HelpIcon />} />
+							<Item label='Settings' to='/settings' icon={<SettingsIcon />} />
 						</List>
 					</>
 				)}
