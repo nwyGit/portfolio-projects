@@ -2,7 +2,7 @@ const styles = {
 	flexCenter: 'flex justify-center items-center',
 
 	blurOverlay: 'backdrop-blur-sm fixed top-0 left-0 w-full h-full',
-	sideBar: 'hidden sm:block pro-sidebar-inner h-screen fade-in-left',
+	sideBar: 'hidden sm:block h-screen fade-in-left',
 
 	elementCenter:
 		'flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',

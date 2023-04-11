@@ -98,7 +98,7 @@ const Navbar = () => {
 							}}
 						>
 							{navItems.map((page) => (
-								<MenuItem key={page} onClick={handleCloseNavMenu}>
+								<MenuItem key={page.path} onClick={handleCloseNavMenu}>
 									<Typography
 										textAlign='center'
 										component='a'
@@ -147,18 +147,24 @@ const Navbar = () => {
 								variant='h5'
 								component='h5'
 								textAlign='center'
-								key={page}
+								key={page.path}
 								onClick={handleCloseNavMenu}
-								sx={{ mx: 4, my: 2, display: 'block', letterSpacing: '.05rem' }}
+								sx={{ mx: 4, display: 'block', letterSpacing: '.05rem' }}
 							>
 								<Link href={`/#${page.path}`}>{page.name}</Link>
 							</Typography>
 						))}
 					</Box>
-					<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+					<Box
+						sx={{
+							display: { xs: 'none', md: 'flex' },
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}
+					>
 						<Button
 							href='/login'
-							sx={{ mx: 4, my: 2, display: 'block', color: 'inherit' }}
+							sx={{ mx: 4, display: 'block', color: 'inherit' }}
 						>
 							<Typography
 								variant='h5'
@@ -174,7 +180,6 @@ const Navbar = () => {
 							variant='contained'
 							href='/register'
 							sx={{
-								my: 2,
 								display: 'block',
 								backgroundColor: colors.primary[800],
 							}}

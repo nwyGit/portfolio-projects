@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import {
@@ -19,6 +19,7 @@ import FormInputPassword from '../form-components/FormInputPassword';
 import FormInputText from '../form-components/FormInputText';
 import { useRouter } from 'next/router';
 import BackgroundImage from '../image-components/BackgroundImage';
+import AlertMessage from '../image-components/AlertMessage';
 
 const RegisterForm = () => {
 	const theme = useTheme();
@@ -27,6 +28,8 @@ const RegisterForm = () => {
 	const reactHookFormMethods = useForm();
 	const { handleSubmit } = reactHookFormMethods;
 
+	const [resMsg, setResMsg] = useState('');
+	const [warning, setWarning] = useState('');
 	const router = useRouter();
 
 	const onSubmit = async (data) => {
@@ -51,7 +54,7 @@ const RegisterForm = () => {
 
 			return registerResponse.data;
 		} catch (err) {
-			throw new Error('Failed to create an account');
+			setWarning(err.response.data.message);
 		}
 	};
 
@@ -194,7 +197,11 @@ const RegisterForm = () => {
 					</CardContent>
 				</Card>
 			</Box>
-			<BackgroundImage ImageUrl='/formBackground.png' alt='register background'/>
+			<BackgroundImage
+				ImageUrl='/formBackground.png'
+				alt='register background'
+			/>
+			{warning && <AlertMessage resMsg={warning} type='error' />}
 		</>
 	);
 };

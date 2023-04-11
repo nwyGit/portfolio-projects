@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { isCollapsedAtom } from '@/state';
@@ -76,9 +75,7 @@ const Sidebar = () => {
 		<>
 			<Box
 				sx={{
-					'&.pro-sidebar-inner': {
-						background: `${colors.primary[200]}`,
-					},
+					background: colors.primary[200],
 				}}
 				className={`${styles.sideBar} ${
 					isCollapsed ? 'w-0' : 'w-1/6 min-w-[16rem]'

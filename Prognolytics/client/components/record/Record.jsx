@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAtom } from 'jotai';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { AddBoxRounded, DeleteForever, Edit } from '@mui/icons-material';
@@ -7,10 +6,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import Header from '../layout/Header';
 import { tokens } from '../../styles/theme';
 import { isStartToScanAtom, isUpdateRecordAtom } from '@/state';
-import { getToken } from '@/lib/authenticate';
 import AlertMessage from '../image-components/AlertMessage';
 import ReceiptForm from '../forms/ExpenseForm';
 import styles from '@/styles';
+import { deleteRecords, getRecords } from '@/lib/service';
 
 const Record = () => {
 	const theme = useTheme();
@@ -24,50 +23,32 @@ const Record = () => {
 	const [resMsg, setResMsg] = useState('');
 
 	useEffect(() => {
-		getRecords();
+		readRecord();
 	}, []);
 
-	const getRecords = async () => {
-		try {
-			const response = await axios.get(
-				`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
-				{
-					headers: {
-						Authorization: `JWT ${getToken()}`,
-						'Content-Type': 'application/json',
-					},
-				}
-			);
-			setRecords(response.data);
-		} catch (err) {
-			console.log(err);
-			throw new Error('Failed to find records.');
-		}
+	const readRecord = () => {
+		getRecords()
+			.then((data) => {
+				setRecords(data);
+			})
+			.catch((err) => {
+				console.log(err);
+				throw new Error('Failed to find records.');
+			});
 	};
 
-	const deleteRecords = async (IDs) => {
-		if (IDs.length > 0) {
-			try {
-				console.log(IDs);
-				const response = await axios.delete(
-					`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
-					{
-						headers: {
-							Authorization: `JWT ${getToken()}`,
-							'Content-Type': 'application/json',
-						},
-						data: { IDs },
-					}
-				);
-				setResMsg(response.data.message);
+	const deleteRecord = (items) => {
+		deleteRecords(items)
+			.then((msg) => {
+				setResMsg(msg);
 				setTimeout(() => {
 					window.location.reload();
 				}, 2000);
-			} catch (err) {
+			})
+			.catch((err) => {
 				console.log(err);
 				throw new Error('Failed to delete records.');
-			}
-		}
+			});
 	};
 
 	const columns =
@@ -146,10 +127,13 @@ const Record = () => {
 						variant='contained'
 						endIcon={<DeleteForever />}
 						onClick={() => {
-							deleteRecords(deleteItems);
+							deleteRecord(deleteItems);
 						}}
 						sx={{
 							backgroundColor: colors.redAccent[500],
+							'&:hover': {
+								backgroundColor: colors.redAccent[500],
+							},
 						}}
 					>
 						Delete
@@ -161,8 +145,11 @@ const Record = () => {
 							setIsStartToScan(!isStartToScan);
 						}}
 						sx={{
-							backgroundColor: colors.greenAccent[300],
 							color: colors.primary[100],
+							backgroundColor: colors.greenAccent[400],
+							'&:hover': {
+								backgroundColor: colors.greenAccent[400],
+							},
 						}}
 					>
 						Add a record

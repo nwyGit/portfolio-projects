@@ -16,18 +16,12 @@ import {
 	isUpdateRecordAtom,
 } from '@/state';
 import styles from '@/styles';
-import {
-	Alert,
-	Box,
-	Button,
-	IconButton,
-	Typography,
-	useTheme,
-} from '@mui/material';
+import { Box, Button, IconButton, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { tokens } from '@/styles/theme';
-import { getToken } from '@/lib/authenticate';
 import AlertMessage from '../image-components/AlertMessage';
+import { createRecord, updateRecord } from '@/lib/service';
+import categories from '@/public/categories';
 
 const ReceiptForm = ({ receiptData, action }) => {
 	const theme = useTheme();
@@ -39,23 +33,6 @@ const ReceiptForm = ({ receiptData, action }) => {
 	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
 	const [, setIsUpdateRecord] = useAtom(isUpdateRecordAtom);
 	const [resMsg, setResMsg] = useState('');
-
-	const categories = [
-		'Food and Dining',
-		'Transportation',
-		'Housing and Utilities',
-		'Entertainment and Leisure',
-		'Shopping',
-		'Health and Wellness',
-		'Personal Care and Beauty',
-		'Travel and Vacation',
-		'Education and Learning',
-		'Technology and Electronics',
-		'Gifts and Donations',
-		'Home and Garden',
-		'Finances and Fees',
-		'Other',
-	];
 
 	const {
 		register,
@@ -90,46 +67,9 @@ const ReceiptForm = ({ receiptData, action }) => {
 
 	const onSubmit = async (data) => {
 		if (action === 'Create') {
-			try {
-				const response = await axios.post(
-					`${process.env.NEXT_PUBLIC_API_URL}/receipts`,
-					data,
-					{
-						headers: {
-							Authorization: `JWT ${getToken()}`,
-							'Content-Type': 'application/json',
-						},
-					}
-				);
-				setResMsg(response.data.message);
-				setTimeout(() => {
-					setIsEnterManually(!isEnterManually);
-					setIsStartToScan(!isStartToScan);
-					window.location.reload();
-				}, 3000);
-			} catch (err) {
-				throw new Error('Failed to create receipt.');
-			}
+			newRecord(data);
 		} else if (action === 'Update') {
-			try {
-				const response = await axios.put(
-					`${process.env.NEXT_PUBLIC_API_URL}/receipts/${data._id}`,
-					data,
-					{
-						headers: {
-							Authorization: `JWT ${getToken()}`,
-							'Content-Type': 'application/json',
-						},
-					}
-				);
-				setResMsg(response.data.message);
-				setTimeout(() => {
-					setIsUpdateRecord(false);
-					window.location.reload();
-				}, 3000);
-			} catch (err) {
-				throw new Error('Failed to update receipt.');
-			}
+			modifyRecord(data);
 		}
 	};
 
@@ -149,6 +89,37 @@ const ReceiptForm = ({ receiptData, action }) => {
 			(item) => item.length > 0 && typeof item === 'string'
 		);
 		return isValid || 'Please enter a comma-separated list of items';
+	};
+
+	const newRecord = (data) => {
+		createRecord(data)
+			.then((msg) => {
+				setMessage(msg);
+			})
+			.catch((err) => {
+				console.log(err);
+				throw new Error('Failed to create receipt.');
+			});
+	};
+
+	const modifyRecord = (data) => {
+		updateRecord(data)
+			.then((msg) => {
+				setMessage(msg);
+			})
+			.catch((err) => {
+				console.log(err);
+				throw new Error('Failed to update receipt.');
+			});
+	};
+
+	const setMessage = (msg) => {
+		setResMsg(msg);
+		setTimeout(() => {
+			setIsEnterManually(!isEnterManually);
+			setIsStartToScan(!isStartToScan);
+			window.location.reload();
+		}, 3000);
 	};
 
 	return (

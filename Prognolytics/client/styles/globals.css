@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 html {
-	scroll-padding-top: 82px;
+	scroll-behavior: smooth !important;
+	scroll-padding-top: 80px;
 }
 
 .receiptScan {
