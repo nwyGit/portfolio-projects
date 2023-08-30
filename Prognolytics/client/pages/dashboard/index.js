@@ -325,7 +325,7 @@ const Dashboard = () => {
 										</Typography>
 										<Typography variant='h5'>
 											Congratulations! Your remarkable income and minimal
-											expenses have led to financial success. Let's maintain and
+											expenses have led to financial success. Let&apos;s maintain and
 											expand your financial freedom.
 										</Typography>
 									</Box>
