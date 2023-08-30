@@ -1,10 +1,12 @@
 import { isAuthenticated } from '@/lib/authenticate';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const PUBLIC_PATHS = ['/login', '/register', '/', '/_error'];
 
-const RouteGuard = ({ children, pageProps }) => {
+const RouteGuard = ({ children }) => {
+	const { data: session } = useSession();
 	const [authorized, setAuthorized] = useState(false);
 	const router = useRouter();
 

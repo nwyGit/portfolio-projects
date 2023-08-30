@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { AddBoxRounded, DeleteForever, Edit } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '../layout/Header';
 import { tokens } from '../../styles/theme';
-import { isStartToScanAtom, isUpdateRecordAtom } from '@/state';
+import { isStartToScanAtom, isUpdateRecordAtom, recordsAtom } from '@/state';
 import AlertMessage from '../image-components/AlertMessage';
 import ReceiptForm from '../forms/ExpenseForm';
 import styles from '@/styles';
-import { deleteRecords, getRecords } from '@/lib/service';
+import { deleteRecords } from '@/lib/recordService';
 
 const Record = () => {
 	const theme = useTheme();
@@ -17,25 +17,10 @@ const Record = () => {
 
 	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
 	const [isUpdateRecord, setIsUpdateRecord] = useAtom(isUpdateRecordAtom);
-	const [records, setRecords] = useState([]);
+	const [records] = useAtom(recordsAtom);
 	const [record, setRecord] = useState({});
 	const [deleteItems, setDeleteItems] = useState([]);
 	const [resMsg, setResMsg] = useState('');
-
-	useEffect(() => {
-		readRecord();
-	}, []);
-
-	const readRecord = () => {
-		getRecords()
-			.then((data) => {
-				setRecords(data);
-			})
-			.catch((err) => {
-				console.log(err);
-				throw new Error('Failed to find records.');
-			});
-	};
 
 	const deleteRecord = (items) => {
 		deleteRecords(items)
@@ -159,8 +144,8 @@ const Record = () => {
 			{records && records.length > 0 ? (
 				<>
 					<Box
-						m='40px 0 0 0'
-						height='75vh'
+						m='20px 0 0 0'
+						height='80vh'
 						sx={{
 							'& .MuiDataGrid-root': { border: 'none' },
 							'& .MuiDataGrid-cell': { borderBottom: 'none' },

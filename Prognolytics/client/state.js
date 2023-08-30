@@ -7,3 +7,4 @@ export const isUpdateRecordAtom = atom(false);
 export const passwordAtom = atom('');
 export const confirmPasswordAtom = atom('');
 export const passwordMatchAtom = atom(false);
+export const recordsAtom = atom([]);

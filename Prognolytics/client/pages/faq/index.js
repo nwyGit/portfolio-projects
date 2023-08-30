@@ -18,6 +18,11 @@ const questions = [
 			'Your security is our top priority. We use industry-standard encryption methods and secure servers to protect your data. We never share your information with unauthorized third parties.',
 	},
 	{
+		question: 'What devices are compatible with the app?',
+		answer:
+			'Our web application is compatible with most devices, including smartphones, tablets, and computers. We recommend using the latest version of your preferred web browser for the best user experience.',
+	},
+	{
 		question: 'How do I upgrade to a higher plan?',
 		answer:
 			'Upgrading your plan is simple. Just log in to your account, navigate to the "Plans & Pricing" section, and select the plan that best suits your needs. Your new plan will take effect immediately.',
@@ -46,7 +51,7 @@ const FAQ = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<Box m='20px'>
+				<Box m='10px 20px'>
 					<Box
 						display='flex'
 						justifyContent='space-between'
@@ -54,7 +59,7 @@ const FAQ = () => {
 					>
 						<Header title='FAQ' subtitle='Frequently Asked Questions Page' />
 					</Box>
-					<Box m='40px 0 0 0' height='75vh' maxHeight='75vh'>
+					<Box m='20px 0 0 0' height='80vh' sx={{ overflow: 'auto' }}>
 						{questions.map((q) => {
 							return (
 								<>

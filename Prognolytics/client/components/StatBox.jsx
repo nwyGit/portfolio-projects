@@ -1,6 +1,6 @@
 import { tokens } from '@/styles/theme';
 import { Box, Typography, useTheme } from '@mui/material';
-import ProgressCircle from './ProgressCircle';
+import ProgressCircle from './charts/ProgressCircle';
 
 const StatBox = ({ title, subtitle, icon, progress, increase }) => {
 	const theme = useTheme();
@@ -24,13 +24,13 @@ const StatBox = ({ title, subtitle, icon, progress, increase }) => {
 				</Box>
 			</Box>
 			<Box display='flex' justifyContent='space-between' mt='2px'>
-				<Typography variant='h5' sx={{ color: colors.greenAccent[500] }}>
+				<Typography variant='h5' sx={{ color: colors.greenAccent[400] }}>
 					{subtitle}
 				</Typography>
 				<Typography
 					variant='h5'
 					fontStyle='italic'
-					sx={{ color: colors.greenAccent[600] }}
+					sx={{ color: colors.greenAccent[400] }}
 				>
 					{increase}
 				</Typography>

@@ -20,7 +20,7 @@ const ExpenseRecord = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<Box m='20px'>
+				<Box m='10px 20px'>
 					<Record />
 				</Box>
 			</DashboardLayout>

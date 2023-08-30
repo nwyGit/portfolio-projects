@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { useSession } from 'next-auth/react';
 
 const setToken = (token) => {
 	const expirationTime = Date.now() + 60 * 60 * 1000;

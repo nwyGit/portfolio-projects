@@ -20,7 +20,7 @@ import { Box, Button, IconButton, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { tokens } from '@/styles/theme';
 import AlertMessage from '../image-components/AlertMessage';
-import { createRecord, updateRecord } from '@/lib/service';
+import { createRecord, updateRecord } from '@/lib/recordService';
 import categories from '@/public/categories';
 
 const ReceiptForm = ({ receiptData, action }) => {
@@ -77,18 +77,6 @@ const ReceiptForm = ({ receiptData, action }) => {
 		const currentDate = new Date();
 		const inputDate = new Date(dateString);
 		return inputDate > currentDate;
-	};
-
-	const validateItems = (value) => {
-		if (Array.isArray(value)) {
-			value = value.join(',');
-		}
-		const items = value.split(',');
-		const trimmedItems = items.map((item) => item.trim());
-		const isValid = trimmedItems.every(
-			(item) => item.length > 0 && typeof item === 'string'
-		);
-		return isValid || 'Please enter a comma-separated list of items';
 	};
 
 	const newRecord = (data) => {
@@ -279,7 +267,7 @@ const ReceiptForm = ({ receiptData, action }) => {
 										rows='8'
 										type='text'
 										placeholder='e.g. Onions, Potatoes, Garlic, Bananas'
-										{...register('items', { validate: validateItems })}
+										{...register('items')}
 										style={{ color: '#333' }}
 										className={`${styles.formInput}`}
 									/>

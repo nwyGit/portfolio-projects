@@ -7,7 +7,7 @@ const Analytics = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<Box m='20px'>
+				<Box m='10px 20px'>
 					<Box
 						display='flex'
 						justifyContent='space-between'

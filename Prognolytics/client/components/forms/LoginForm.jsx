@@ -12,7 +12,7 @@ import {
 	useTheme,
 } from '@mui/material';
 import { Facebook, GitHub, Google, Twitter } from '@mui/icons-material';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInputText from '../form-components/FormInputText';
 import FormInputPassword from '../form-components/FormInputPassword';
@@ -23,6 +23,8 @@ import styles from '@/styles';
 import BackgroundImage from '../image-components/BackgroundImage';
 
 const LoginForm = () => {
+	// const { data: session } = useSession();
+	// console.log(session);
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
@@ -116,7 +118,14 @@ const LoginForm = () => {
 									</Typography>
 								</Box>
 								<Divider sx={{ my: 5 }}>or</Divider>
-								<Box
+								<Box>
+									<Typography>
+										Feel free to look around using demo account
+									</Typography>
+									<Typography>Email Address: demo@demo.com</Typography>
+									<Typography>Password: demo</Typography>
+								</Box>
+								{/* <Box
 									sx={{
 										display: 'flex',
 										alignItems: 'center',
@@ -139,18 +148,21 @@ const LoginForm = () => {
 											<Twitter sx={{ color: '#1da1f2' }} />
 										</IconButton>
 									</Link>
-									<Link href='' passHref legacyBehavior>
-										<IconButton component='a' onClick={() => signIn('github')}>
-											<GitHub
-												sx={{
-													color: (theme) =>
-														theme.palette.mode === 'light'
-															? '#272727'
-															: theme.palette.grey[300],
-												}}
-											/>
-										</IconButton>
-									</Link>
+									<IconButton
+										component='a'
+										onClick={async () =>
+											signIn('github')
+										}
+									>
+										<GitHub
+											sx={{
+												color: (theme) =>
+													theme.palette.mode === 'light'
+														? '#272727'
+														: theme.palette.grey[300],
+											}}
+										/>
+									</IconButton>
 									<Link href='/' passHref legacyBehavior>
 										<IconButton
 											component='a'
@@ -159,13 +171,13 @@ const LoginForm = () => {
 											<Google sx={{ color: '#db4437' }} />
 										</IconButton>
 									</Link>
-								</Box>
+								</Box> */}
 							</form>
 						</FormProvider>
 					</CardContent>
 				</Card>
 			</Box>
-			<BackgroundImage ImageUrl='/formBackground.png' alt='login background'/>
+			<BackgroundImage ImageUrl='/formBackground.png' alt='login background' />
 			{resMsg && <AlertMessage resMsg={resMsg} type='success' />}
 			{warning && <AlertMessage resMsg={warning} type='error' />}
 		</>

@@ -14,17 +14,53 @@ import {
 } from '@mui/icons-material';
 import { Box, Button, IconButton, Typography } from '@mui/material';
 import { mockTransactions } from '@/data/mockData';
-import ProgressCircle from '@/components/ProgressCircle';
+import ProgressCircle from '@/components/charts/ProgressCircle';
 import BarChart from '@/components/charts/BarChart';
+import { getRecords } from '@/lib/recordService';
+import categories from '@/public/categories';
+import { useAtom } from 'jotai';
+import { recordsAtom } from '@/state';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
+	const [records, setRecords] = useAtom(recordsAtom);
+
+	useEffect(() => {
+		readRecord();
+	}, []);
+
+	const readRecord = () => {
+		getRecords()
+			.then((data) => {
+				setRecords(data);
+			})
+			.catch((err) => {
+				console.log(err);
+				throw new Error('Failed to find records.');
+			});
+	};
+
+	const pieChartData = categories.map((category) => {
+		return {
+			id: category,
+			label: category,
+			value: 0,
+		};
+	});
+
+	records.forEach((record) => {
+		pieChartData.forEach((cat) => {
+			if (cat.id === record.category) cat.value += record.amount;
+		});
+	});
+
 	return (
 		<>
 			<DashboardLayout>
-				<Box m='20px'>
+				<Box m='10px 20px'>
 					<Box
 						display='flex'
 						justifyContent='space-between'
@@ -49,13 +85,13 @@ const Dashboard = () => {
 							</Button>
 						</Box>
 					</Box>
-					<Box m='40px 0 0 0' height='75vh'>
+					<Box m='20px 0 0 0' height='80vh' sx={{ overflow: 'auto' }}>
 						{/* GRID & CHARTS */}
 						<Box
 							display='grid'
 							gridTemplateColumns='repeat(12, 1fr)'
-							gridAutoRows='8rem'
-							gap='1.25rem'
+							gridAutoRows='7rem'
+							gap='1.5rem'
 						>
 							{/* ROW 1 */}
 							<Box
@@ -73,7 +109,7 @@ const Dashboard = () => {
 									icon={
 										<Email
 											sx={{
-												color: colors.greenAccent[600],
+												color: colors.greenAccent[400],
 												fontSize: '26px',
 											}}
 										/>
@@ -95,7 +131,7 @@ const Dashboard = () => {
 									icon={
 										<PointOfSale
 											sx={{
-												color: colors.greenAccent[600],
+												color: colors.greenAccent[400],
 												fontSize: '26px',
 											}}
 										/>
@@ -117,7 +153,7 @@ const Dashboard = () => {
 									icon={
 										<PersonAdd
 											sx={{
-												color: colors.greenAccent[600],
+												color: colors.greenAccent[400],
 												fontSize: '26px',
 											}}
 										/>
@@ -139,7 +175,7 @@ const Dashboard = () => {
 									icon={
 										<Traffic
 											sx={{
-												color: colors.greenAccent[600],
+												color: colors.greenAccent[400],
 												fontSize: '26px',
 											}}
 										/>
@@ -154,7 +190,7 @@ const Dashboard = () => {
 								backgroundColor={colors.primary[200]}
 							>
 								<Box
-									mt='25px'
+									mt='15px'
 									p='0 30px'
 									display='flex'
 									justifyContent='space-between'
@@ -171,7 +207,7 @@ const Dashboard = () => {
 										<Typography
 											variant='h3'
 											fontWeight='bold'
-											color={colors.greenAccent[500]}
+											color={colors.greenAccent[400]}
 										>
 											$59,342.32
 										</Typography>
@@ -181,13 +217,13 @@ const Dashboard = () => {
 											<DownloadOutlined
 												sx={{
 													fontSize: '26px',
-													color: colors.greenAccent[500],
+													color: colors.greenAccent[400],
 												}}
 											/>
 										</IconButton>
 									</Box>
 								</Box>
-								<Box height='250px' m='-20px 0 0 0'>
+								<Box height='240px' m='-2rem 0 0 0'>
 									<LineChart isDashboard={true} />
 								</Box>
 							</Box>
@@ -224,7 +260,7 @@ const Dashboard = () => {
 									>
 										<Box>
 											<Typography
-												color={colors.greenAccent[500]}
+												color={colors.greenAccent[400]}
 												variant='h5'
 												fontWeight='600'
 											>
@@ -236,7 +272,7 @@ const Dashboard = () => {
 										</Box>
 										<Box color={colors.grey[100]}>{transaction.date}</Box>
 										<Box
-											backgroundColor={colors.greenAccent[500]}
+											backgroundColor={colors.greenAccent[400]}
 											p='5px 10px'
 											borderRadius='4px'
 										>
@@ -251,28 +287,48 @@ const Dashboard = () => {
 								gridColumn='span 4'
 								gridRow='span 2'
 								backgroundColor={colors.primary[200]}
-								p='30px'
+								p='15px'
 							>
 								<Typography variant='h5' fontWeight='600'>
-									Campaign
+									Health Score
 								</Typography>
 								<Box
 									display='flex'
-									flexDirection='column'
+									flexDirection='row'
+									justifyContent='center'
 									alignItems='center'
-									mt='25px'
+									sx={{ m: '1rem' }}
 								>
-									<ProgressCircle size='125' />
-									<Typography
-										variant='h5'
-										color={colors.greenAccent[500]}
-										sx={{ mt: '15px' }}
-									>
-										$48,352 revenue generated
-									</Typography>
-									<Typography>
-										Includes extra misc expenditures and costs
-									</Typography>
+									<Box sx={{ position: 'relative' }}>
+										<ProgressCircle size='125' />
+										<Typography
+											variant='h1'
+											fontWeight='bold'
+											sx={{
+												position: 'absolute',
+												top: '50%',
+												left: '50%',
+												transform: 'translate(-50%, -50%)',
+											}}
+										>
+											98
+										</Typography>
+									</Box>
+									<Box sx={{ width: 250, ml: '2rem' }}>
+										<Typography
+											variant='h4'
+											fontWeight='bold'
+											color={colors.greenAccent[400]}
+											sx={{ mb: '.5rem' }}
+										>
+											Excellent
+										</Typography>
+										<Typography variant='h5'>
+											Congratulations! Your remarkable income and minimal
+											expenses have led to financial success. Let's maintain and
+											expand your financial freedom.
+										</Typography>
+									</Box>
 								</Box>
 							</Box>
 							<Box
@@ -283,7 +339,7 @@ const Dashboard = () => {
 								<Typography
 									variant='h5'
 									fontWeight='600'
-									sx={{ padding: '30px 30px 0 30px' }}
+									sx={{ padding: '15px 15px 0 15px' }}
 								>
 									Sales Quantity
 								</Typography>
@@ -295,7 +351,7 @@ const Dashboard = () => {
 								gridColumn='span 4'
 								gridRow='span 2'
 								backgroundColor={colors.primary[200]}
-								padding='30px'
+								p='15px'
 							>
 								<Typography
 									variant='h5'

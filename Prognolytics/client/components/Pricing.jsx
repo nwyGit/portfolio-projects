@@ -111,8 +111,9 @@ const Pricing = () => {
 												backgroundColor: colors.greenAccent[400],
 												color: 'white',
 												borderRadius: '1rem 1rem 0 0',
-												top: '-1.5rem',
-												left: 'calc(50% - 5.4rem)',
+												top: '50%',
+												left: '50%',
+												transform: 'translate(-50%, -50%)',
 												padding: '.25rem 2rem',
 											}}
 										>
