@@ -2,7 +2,11 @@ import RegisterModal from "./components/modals/RegisterModal";
 import Navbar from "./components/navbar/Navbar";
 import "./globals.css";
 import { Nunito } from "next/font/google";
+
 import ToasterProvider from "./providers/ToasterProvider";
+import LoginModal from "./components/modals/LoginModal";
+import ClientOnly from "./components/ClientOnly";
+import { ReduxProvider } from "./components/ReduxProvider";
 
 const font = Nunito({ subsets: ["latin"] });
 
@@ -19,10 +23,15 @@ export default function RootLayout({
       */}
       <head />
       <body className={font.className}>
-        <ToasterProvider />
-        <RegisterModal />
-        <Navbar />
-        {children}
+        <ReduxProvider>
+          <ClientOnly>
+            <ToasterProvider />
+            <RegisterModal />
+            <LoginModal />
+            <Navbar />
+          </ClientOnly>
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );

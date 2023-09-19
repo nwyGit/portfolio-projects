@@ -1,24 +1,30 @@
 "use client";
 
-import { AiFillGithub } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
 import { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 import { FieldValues, Message, SubmitHandler, useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
+import { AiFillGithub } from "react-icons/ai";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
+import { AppDispatch } from "@/app/store";
+import { setUser } from "@/app/reducers/userReducer";
+import { Credentials } from "@/app/types";
 
-import authServices from "@/app/services/auth";
-import { userForm } from "@/app/types";
+const LoginModal = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
-const RegisterModal = () => {
+  const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -27,8 +33,6 @@ const RegisterModal = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      firstname: "",
-      lastname: "",
       email: "",
       password: "",
     },
@@ -38,39 +42,43 @@ const RegisterModal = () => {
     setIsLoading(true);
 
     try {
-      await authServices.register(formData as userForm);
-      toast.success("Account Registered !");
-      registerModal.onClose();
+      dispatch(setUser(formData as Credentials));
+      toast.success("Logged in");
+      router.refresh();
+      loginModal.onClose();
     } catch (error) {
       toast.error(error as Message);
     } finally {
       setIsLoading(false);
     }
+
+    // signIn('credentials', {
+    //   ...data,
+    //   redirect: false,
+    // })
+    // .then((callback) => {
+    //   setIsLoading(false);
+
+    //   if (callback?.ok) {
+    //     toast.success('Logged in');
+    //     router.refresh();
+    //     loginModal.onClose();
+    //   }
+
+    //   if (callback?.error) {
+    //     toast.error(callback.error);
+    //   }
+    // });
   };
 
   const onToggle = useCallback(() => {
-    registerModal.onClose();
-  }, [registerModal]);
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
-      <Heading title="Welcome to HomieComb" subtitle="Create an account !" />
-      <Input
-        id="firstname"
-        label="First name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-      />
-      <Input
-        id="lastname"
-        label="Last name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-      />
+      <Heading title="Welcome back" subtitle="Login to your account !" />
       <Input
         id="email"
         label="Email"
@@ -106,15 +114,22 @@ const RegisterModal = () => {
         icon={AiFillGithub}
         onClick={() => {}}
       />
-      <div className="text-neutral-500 text-center mt-4 font-light">
+      <div
+        className="
+      text-neutral-500 text-center mt-4 font-light"
+      >
         <p>
-          Already have an account?
+          First time using Airbnb?
           <span
             onClick={onToggle}
-            className="text-neutral-800 cursor-pointer hover:underline"
+            className="
+              text-neutral-800
+              cursor-pointer 
+              hover:underline
+            "
           >
             {" "}
-            Log in
+            Create an account
           </span>
         </p>
       </div>
@@ -124,10 +139,10 @@ const RegisterModal = () => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={registerModal.isOpen}
-      title="Register"
+      isOpen={loginModal.isOpen}
+      title="Login"
       actionLabel="Continue"
-      onClose={registerModal.onClose}
+      onClose={loginModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={bodyContent}
       footer={footerContent}
@@ -135,4 +150,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default LoginModal;

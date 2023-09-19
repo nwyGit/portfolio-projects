@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const Logo = () => {
-  //const router = useRouter();
+  const router = useRouter();
 
   return (
     <Image
+      onClick={() => router.push("/")}
       alt="logo"
       className="hidden md:block cursor-pointer"
       height="40"
