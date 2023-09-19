@@ -1,10 +1,10 @@
-package com.homiecomb.demo;
+package com.raymondNg.homieComb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class HomieCombApplicationTests {
 
 	@Test
 	void contextLoads() {
