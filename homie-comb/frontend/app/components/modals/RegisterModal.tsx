@@ -4,7 +4,7 @@ import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
-import { FieldValues, Message, SubmitHandler, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 
@@ -15,8 +15,10 @@ import Button from "../Button";
 
 import authServices from "@/app/services/auth";
 import { userForm } from "@/app/types";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 const RegisterModal = () => {
+  const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,11 +40,11 @@ const RegisterModal = () => {
     setIsLoading(true);
 
     try {
-      await authServices.register(formData as userForm);
+      await authServices.registerUser(formData as userForm);
       toast.success("Account Registered !");
       registerModal.onClose();
     } catch (error) {
-      toast.error(error as Message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +52,8 @@ const RegisterModal = () => {
 
   const onToggle = useCallback(() => {
     registerModal.onClose();
-  }, [registerModal]);
+    loginModal.onOpen();
+  }, [registerModal, loginModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">

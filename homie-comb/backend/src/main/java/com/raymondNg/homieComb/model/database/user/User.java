@@ -1,4 +1,4 @@
-package com.raymondNg.homieComb.model;
+package com.raymondNg.homieComb.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,8 +56,7 @@ public class User implements UserDetails {
 
     @Column(
             name = "password",
-            nullable = false,
-            columnDefinition = "varchar(255) default ''"
+            nullable = false
     )
     private String password;
 

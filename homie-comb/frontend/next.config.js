@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  images: {
+    domains: ["homiecomb.s3.us-east-2.amazonaws.com"],
+  },
 };
 
 module.exports = nextConfig;

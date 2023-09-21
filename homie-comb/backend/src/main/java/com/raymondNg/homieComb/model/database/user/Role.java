@@ -1,4 +1,4 @@
-package com.raymondNg.homieComb.model;
+package com.raymondNg.homieComb.model.user;
 
 /**
  * ClassName: Role

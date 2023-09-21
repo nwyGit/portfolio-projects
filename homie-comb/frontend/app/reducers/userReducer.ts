@@ -1,6 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-import authService from "@/app/services/auth";
 import jwtDecode from "jwt-decode";
+
+import { createSlice } from "@reduxjs/toolkit";
+import authServices from "@/app/services/auth";
+
 import { AppDispatch } from "../store";
 import { Credentials } from "../types";
 
@@ -21,13 +23,17 @@ const userSlice = createSlice({
 export const { setUserReducer } = userSlice.actions;
 export const setUser = (credentials: Credentials | null) => {
 	return async (dispatch: AppDispatch) => {
-		if (credentials) {
-			const token = await authService.login(credentials);
-			localStorage.setItem("access_token", token);
-			const decodedToken = jwtDecode(token) as DecodedToken;
-			dispatch(setUserReducer(decodedToken.sub));
-		} else {
-			dispatch(setUserReducer(null));
+		try {
+			if (credentials) {
+				const token = await authServices.loginUser(credentials);
+				localStorage.setItem("access_token", token);
+				const decodedToken = jwtDecode(token) as DecodedToken;
+				dispatch(setUserReducer(decodedToken.sub));
+			} else {
+				dispatch(setUserReducer(null));
+			}
+		} catch (error) {
+			throw error;
 		}
 	};
 };

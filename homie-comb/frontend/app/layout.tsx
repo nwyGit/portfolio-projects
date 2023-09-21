@@ -7,6 +7,7 @@ import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/modals/LoginModal";
 import ClientOnly from "./components/ClientOnly";
 import { ReduxProvider } from "./components/ReduxProvider";
+import ListingModal from "./components/modals/ListingModal";
 
 const font = Nunito({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             <ToasterProvider />
             <RegisterModal />
             <LoginModal />
+            <ListingModal />
             <Navbar />
           </ClientOnly>
           {children}

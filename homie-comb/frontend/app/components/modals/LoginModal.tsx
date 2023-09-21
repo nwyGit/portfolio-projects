@@ -42,12 +42,12 @@ const LoginModal = () => {
     setIsLoading(true);
 
     try {
-      dispatch(setUser(formData as Credentials));
+      await dispatch(setUser(formData as Credentials));
       toast.success("Logged in");
       router.refresh();
       loginModal.onClose();
     } catch (error) {
-      toast.error(error as Message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +119,7 @@ const LoginModal = () => {
       text-neutral-500 text-center mt-4 font-light"
       >
         <p>
-          First time using Airbnb?
+          First time using HomieComb?
           <span
             onClick={onToggle}
             className="
