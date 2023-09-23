@@ -1,26 +1,22 @@
 import axios from "axios";
 
-const uploadImage = async (image) => {
-  const config = {
-    headers: { Authorization: localStorage.getItem("access_token") },
-  };
+const uploadImage = async (image: any) => {
+	const config = {
+		headers: { Authorization: localStorage.getItem("access_token") },
+		"Content-Type": "multipart/form-data",
+	};
 
-  const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/util/upload-image`,
-    image,
-    { ...config, "Content-Type": "multipart/form-data" },
-  );
+	const response = await axios.post(
+		`${process.env.NEXT_PUBLIC_API_URL}/util/upload-image`,
+		image,
+		{ ...config }
+	);
 
-  return response.data;
-};
-
-const getImage = async (id: string) => {
-  return await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/listings`);
+	return response.data;
 };
 
 const utilServices = {
-  uploadImage,
-  getImage,
+	uploadImage,
 };
 
 export default utilServices;

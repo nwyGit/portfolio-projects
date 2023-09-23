@@ -1,6 +1,7 @@
 import axios from "axios";
-import { Listing, currentUser } from "../types";
 import jwtDecode from "jwt-decode";
+
+import { Listing, currentUser } from "../types";
 
 const getAllListings = async (query: any) => {
 	const response = await axios.get(

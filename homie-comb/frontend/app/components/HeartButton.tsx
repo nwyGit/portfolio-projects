@@ -5,7 +5,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useFavorite from "@/app/hooks/useFavorite";
 
 interface HeartButtonProps {
-	listingId: string;
+	listingId: number;
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({ listingId }) => {

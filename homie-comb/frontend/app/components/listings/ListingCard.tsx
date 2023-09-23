@@ -31,9 +31,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 	const router = useRouter();
 	const { getByValue } = useCountries();
 
-	console.log(data);
-
-	const location = getByValue(data.location.value as string);
+	const location = getByValue(data.location.value);
 
 	const handleCancel = useCallback(
 		(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -76,6 +74,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 				<div className="aspect-square w-full relative overflow-hidden rounded-xl">
 					<Image
 						fill
+						sizes="25vw"
 						className="object-cover h-full w-full group-hover:scale-110 transition"
 						src={`${process.env.NEXT_PUBLIC_S3_URL}/${data.imageKey}`}
 						alt="Listing"

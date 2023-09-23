@@ -1,9 +1,9 @@
 package com.raymondNg.homieComb.controller;/**
-* ClassName: SecurityConfig
+* ClassName: UserController
 * Package: com.raymondNg.homieComb.controller
 * Description:
 * @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-19 15:20
+* @Create 2023-09-23 15:11
 * @Version 1.0
-*/public class SecurityConfig {
+*/public class UserController {
 }

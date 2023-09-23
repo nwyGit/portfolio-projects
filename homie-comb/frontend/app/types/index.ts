@@ -26,4 +26,8 @@ export interface Listing {
 	price: number;
 }
 
-export interface currentUser {}
+export interface currentUser {
+	sub: string;
+	username: string;
+	favoriteIds: number[];
+}

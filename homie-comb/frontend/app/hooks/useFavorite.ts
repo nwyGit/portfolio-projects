@@ -4,16 +4,20 @@ import { useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";
 
 import useLoginModal from "./useLoginModal";
-import { useAppSelector } from "../store";
+import { AppDispatch, useAppSelector } from "../store";
+import userServices from "../services/user";
+import { useDispatch } from "react-redux";
+import { setUserFavorites } from "../reducers/userReducer";
 
-const useFavorite = (listingId: string) => {
+const useFavorite = (listingId: number) => {
 	const router = useRouter();
 	const currentUser = useAppSelector((state) => state.user);
+	const dispatch = useDispatch<AppDispatch>();
 
 	const loginModal = useLoginModal();
 
 	const hasFavorited = useMemo(() => {
-		const list = currentUser?.favorites || [];
+		const list = currentUser?.favoriteIds || [];
 
 		return list.includes(listingId);
 	}, [currentUser, listingId]);
@@ -22,27 +26,29 @@ const useFavorite = (listingId: string) => {
 		async (e: React.MouseEvent<HTMLDivElement>) => {
 			e.stopPropagation();
 
-			if (!currentUser) {
+			if (!currentUser || currentUser.username.length === 0) {
 				return loginModal.onOpen();
 			}
 
 			try {
-				let request;
+				const newFavoriteIds = hasFavorited
+					? (currentUser.favoriteIds || []).filter((id) => id !== listingId)
+					: [...(currentUser.favoriteIds || []), listingId];
 
-				if (hasFavorited) {
-					request = () => axios.delete(`/api/favorites/${listingId}`);
-				} else {
-					request = () => axios.post(`/api/favorites/${listingId}`);
-				}
+				await userServices.updateUserFavorites(
+					currentUser.username,
+					newFavoriteIds
+				);
 
-				await request();
+				dispatch(setUserFavorites(newFavoriteIds));
+
 				router.refresh();
-				toast.success("Success");
+				toast.success("Favorites updated");
 			} catch (error) {
 				toast.error("Something went wrong.");
 			}
 		},
-		[currentUser, hasFavorited, listingId, loginModal, router]
+		[currentUser, hasFavorited, listingId, loginModal, router, dispatch]
 	);
 
 	return {

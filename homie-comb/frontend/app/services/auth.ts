@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { Credentials, userForm } from "../types";
 
 const registerUser = async (user: userForm) => {
