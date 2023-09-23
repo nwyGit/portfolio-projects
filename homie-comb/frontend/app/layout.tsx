@@ -12,29 +12,29 @@ import ListingModal from "./components/modals/ListingModal";
 const font = Nunito({ subsets: ["latin"] });
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      {/*
+	return (
+		<html lang="en">
+			{/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
-      <head />
-      <body className={font.className}>
-        <ReduxProvider>
-          <ClientOnly>
-            <ToasterProvider />
-            <RegisterModal />
-            <LoginModal />
-            <ListingModal />
-            <Navbar />
-          </ClientOnly>
-          {children}
-        </ReduxProvider>
-      </body>
-    </html>
-  );
+			<head />
+			<body className={font.className}>
+				<ReduxProvider>
+					<ClientOnly>
+						<ToasterProvider />
+						<RegisterModal />
+						<LoginModal />
+						<ListingModal />
+						<Navbar />
+					</ClientOnly>
+					<div className="pb-20 pt-28">{children}</div>
+				</ReduxProvider>
+			</body>
+		</html>
+	);
 }

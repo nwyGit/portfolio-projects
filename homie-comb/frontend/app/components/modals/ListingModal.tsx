@@ -48,11 +48,11 @@ const RentModal = () => {
 		defaultValues: {
 			category: "",
 			location: null,
-			guestCount: 1,
-			roomCount: 1,
-			bathroomCount: 1,
-			imageId: "",
-			price: 1,
+			guestCount: 0,
+			roomCount: 0,
+			bathroomCount: 0,
+			imageKey: "",
+			price: 0,
 			title: "",
 			description: "",
 		},
@@ -63,7 +63,7 @@ const RentModal = () => {
 	const guestCount = watch("guestCount");
 	const roomCount = watch("roomCount");
 	const bathroomCount = watch("bathroomCount");
-	const imageId = watch("imageId");
+	const imageKey = watch("imageKey");
 
 	const Map = useMemo(
 		() =>
@@ -97,8 +97,6 @@ const RentModal = () => {
 		setIsLoading(true);
 
 		try {
-			console.log(data);
-
 			await listingServices.addListing(data as Listing);
 			toast.success("Listing created!");
 			router.refresh();
@@ -213,8 +211,8 @@ const RentModal = () => {
 					subtitle="Show guests what your place looks like!"
 				/>
 				<ImageUpload
-					onChange={(value) => setCustomValue("imageId", value)}
-					value={imageId}
+					onChange={(value) => setCustomValue("imageKey", value)}
+					value={imageKey}
 					url={{ imageSrc, setImageSrc }}
 				/>
 			</div>

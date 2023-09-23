@@ -4,11 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import authServices from "@/app/services/auth";
 
 import { AppDispatch } from "../store";
-import { Credentials } from "../types";
-
-interface DecodedToken {
-	sub: string;
-}
+import { Credentials, currentUser } from "../types";
 
 const userSlice = createSlice({
 	name: "user",
@@ -27,8 +23,10 @@ export const setUser = (credentials: Credentials | null) => {
 			if (credentials) {
 				const token = await authServices.loginUser(credentials);
 				localStorage.setItem("access_token", token);
-				const decodedToken = jwtDecode(token) as DecodedToken;
-				dispatch(setUserReducer(decodedToken.sub));
+				const decodedToken: currentUser | null = token
+					? jwtDecode(token)
+					: null;
+				dispatch(setUserReducer(decodedToken));
 			} else {
 				dispatch(setUserReducer(null));
 			}

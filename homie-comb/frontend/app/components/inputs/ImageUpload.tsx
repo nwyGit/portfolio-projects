@@ -15,7 +15,7 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value, url }) => {
 	const onDrop = useCallback(
-		async (acceptedFiles) => {
+		async (acceptedFiles: any) => {
 			const imageData = new FormData();
 			imageData.append("file", acceptedFiles[0]);
 
