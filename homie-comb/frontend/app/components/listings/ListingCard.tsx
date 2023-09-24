@@ -6,104 +6,104 @@ import { useCallback, useMemo } from "react";
 import { format } from "date-fns";
 
 import useCountries from "@/app/hooks/useCountries";
-import { Listing } from "@/app/types";
+import { Listing, ReservationRequest } from "@/app/types";
 
 import HeartButton from "../HeartButton";
 import Button from "../Button";
 
 interface ListingCardProps {
-	data: Listing;
-	reservation?: Reservation;
-	onAction?: (id: string) => void;
-	disabled?: boolean;
-	actionLabel?: string;
-	actionId?: string;
+  data: Listing;
+  reservation?: ReservationRequest;
+  onAction?: (id: string) => void;
+  disabled?: boolean;
+  actionLabel?: string;
+  actionId?: string;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
-	data,
-	reservation,
-	onAction,
-	disabled,
-	actionLabel,
-	actionId = "",
+  data,
+  reservation,
+  onAction,
+  disabled,
+  actionLabel,
+  actionId = "",
 }) => {
-	const router = useRouter();
-	const { getByValue } = useCountries();
+  const router = useRouter();
+  const { getByValue } = useCountries();
 
-	const location = getByValue(data.location.value);
+  const location = getByValue(data.location.value);
 
-	const handleCancel = useCallback(
-		(e: React.MouseEvent<HTMLButtonElement>) => {
-			e.stopPropagation();
+  const handleCancel = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
 
-			if (disabled) {
-				return;
-			}
+      if (disabled) {
+        return;
+      }
 
-			onAction?.(actionId);
-		},
-		[disabled, onAction, actionId]
-	);
+      onAction?.(actionId);
+    },
+    [disabled, onAction, actionId],
+  );
 
-	const price = useMemo(() => {
-		if (reservation) {
-			return reservation.totalPrice;
-		}
+  const price = useMemo(() => {
+    if (reservation) {
+      return reservation.totalPrice;
+    }
 
-		return data.price;
-	}, [reservation, data.price]);
+    return data.price;
+  }, [reservation, data.price]);
 
-	const reservationDate = useMemo(() => {
-		if (!reservation) {
-			return null;
-		}
+  const reservationDate = useMemo(() => {
+    if (!reservation) {
+      return null;
+    }
 
-		const start = new Date(reservation.startDate);
-		const end = new Date(reservation.endDate);
+    const start = new Date(reservation.startDate);
+    const end = new Date(reservation.endDate);
 
-		return `${format(start, "PP")} - ${format(end, "PP")}`;
-	}, [reservation]);
+    return `${format(start, "PP")} - ${format(end, "PP")}`;
+  }, [reservation]);
 
-	return (
-		<div
-			onClick={() => router.push(`/listings/${data.id}`)}
-			className="col-span-1 cursor-pointer group"
-		>
-			<div className="flex flex-col gap-2 w-full">
-				<div className="aspect-square w-full relative overflow-hidden rounded-xl">
-					<Image
-						fill
-						sizes="25vw"
-						className="object-cover h-full w-full group-hover:scale-110 transition"
-						src={`${process.env.NEXT_PUBLIC_S3_URL}/${data.imageKey}`}
-						alt="Listing"
-					/>
-					<div className="absolute top-3 right-3">
-						<HeartButton listingId={data.id} />
-					</div>
-				</div>
-				<div className="font-semibold text-lg">
-					{location?.region}, {location?.label}
-				</div>
-				<div className="font-light text-neutral-500">
-					{reservationDate || data.category}
-				</div>
-				<div className="flex flex-row items-center gap-1">
-					<div className="font-semibold">$ {price}</div>
-					{!reservation && <div className="font-light">night</div>}
-				</div>
-				{onAction && actionLabel && (
-					<Button
-						disabled={disabled}
-						small
-						label={actionLabel}
-						onClick={handleCancel}
-					/>
-				)}
-			</div>
-		</div>
-	);
+  return (
+    <div
+      onClick={() => router.push(`/listings/${data.id}`)}
+      className="col-span-1 cursor-pointer group"
+    >
+      <div className="flex flex-col gap-2 w-full">
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+          <Image
+            fill
+            sizes="25vw"
+            className="object-cover h-full w-full group-hover:scale-110 transition"
+            src={`${process.env.NEXT_PUBLIC_S3_LISTING_URL}/${data.imageKey}`}
+            alt="Listing"
+          />
+          <div className="absolute top-3 right-3">
+            <HeartButton listingId={data.id ? data.id : 0} />
+          </div>
+        </div>
+        <div className="font-semibold text-lg">
+          {location?.region}, {location?.label}
+        </div>
+        <div className="font-light text-neutral-500">
+          {reservationDate || data.category}
+        </div>
+        <div className="flex flex-row items-center gap-1">
+          <div className="font-semibold">$ {price}</div>
+          {!reservation && <div className="font-light">night</div>}
+        </div>
+        {onAction && actionLabel && (
+          <Button
+            disabled={disabled}
+            small
+            label={actionLabel}
+            onClick={handleCancel}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ListingCard;

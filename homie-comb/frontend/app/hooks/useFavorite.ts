@@ -10,51 +10,51 @@ import { useDispatch } from "react-redux";
 import { setUserFavorites } from "../reducers/userReducer";
 
 const useFavorite = (listingId: number) => {
-	const router = useRouter();
-	const currentUser = useAppSelector((state) => state.user);
-	const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const currentUser = useAppSelector((state) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
 
-	const loginModal = useLoginModal();
+  const loginModal = useLoginModal();
 
-	const hasFavorited = useMemo(() => {
-		const list = currentUser?.favoriteIds || [];
+  const hasFavorited = useMemo(() => {
+    const list = currentUser?.favoriteIds || [];
 
-		return list.includes(listingId);
-	}, [currentUser, listingId]);
+    return list.includes(listingId);
+  }, [currentUser, listingId]);
 
-	const toggleFavorite = useCallback(
-		async (e: React.MouseEvent<HTMLDivElement>) => {
-			e.stopPropagation();
+  const toggleFavorite = useCallback(
+    async (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
 
-			if (!currentUser || currentUser.username.length === 0) {
-				return loginModal.onOpen();
-			}
+      if (!currentUser || currentUser.username.length === 0) {
+        return loginModal.onOpen();
+      }
 
-			try {
-				const newFavoriteIds = hasFavorited
-					? (currentUser.favoriteIds || []).filter((id) => id !== listingId)
-					: [...(currentUser.favoriteIds || []), listingId];
+      try {
+        const newFavoriteIds = hasFavorited
+          ? (currentUser.favoriteIds || []).filter((id) => id !== listingId)
+          : [...(currentUser.favoriteIds || []), listingId];
 
-				await userServices.updateUserFavorites(
-					currentUser.username,
-					newFavoriteIds
-				);
+        await userServices.updateUserFavorites(
+          currentUser.username,
+          newFavoriteIds,
+        );
 
-				dispatch(setUserFavorites(newFavoriteIds));
+        dispatch(setUserFavorites(newFavoriteIds));
 
-				router.refresh();
-				toast.success("Favorites updated");
-			} catch (error) {
-				toast.error("Something went wrong.");
-			}
-		},
-		[currentUser, hasFavorited, listingId, loginModal, router, dispatch]
-	);
+        router.refresh();
+        toast.success("Favorites updated");
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
+    },
+    [currentUser, hasFavorited, listingId, loginModal, router, dispatch],
+  );
 
-	return {
-		hasFavorited,
-		toggleFavorite,
-	};
+  return {
+    hasFavorited,
+    toggleFavorite,
+  };
 };
 
 export default useFavorite;
