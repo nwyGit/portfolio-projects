@@ -15,7 +15,7 @@ import useListingModal from "@/app/hooks/useListingModal";
 
 const UserMenu = () => {
   const router = useRouter();
-  const user = useAppSelector((state) => state.user);
+  const currentUser = useAppSelector((state) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const registerModal = useRegisterModal();
@@ -36,7 +36,7 @@ const UserMenu = () => {
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden md:block py-3 px-4">
-          <span>{user?.username}</span>
+          <span>{currentUser?.username}</span>
         </div>
         <div
           onClick={() => toggleOpen()}
@@ -44,14 +44,14 @@ const UserMenu = () => {
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <Avatar src={user?.avatarKey} />
+            <Avatar src={currentUser?.avatarKey} />
           </div>
         </div>
       </div>
       {isOpen && (
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
-            {user ? (
+            {currentUser ? (
               <>
                 <MenuItem
                   onClick={() => router.push("/trips")}

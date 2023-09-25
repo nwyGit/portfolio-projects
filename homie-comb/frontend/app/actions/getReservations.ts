@@ -1,31 +1,35 @@
 import reservationServices from "../services/reservation";
 
 interface IParams {
-  listingId?: number;
-  userId?: number;
-  authorId?: string;
+	listingId?: number;
+	username?: string;
+	authorId?: string;
 }
 
 export default async function getReservations(params: IParams) {
-  try {
-    const { listingId, userId, authorId } = params;
+	try {
+		const { listingId, authorId } = params;
 
-    const query: any = {};
+		const query: any = {};
 
-    if (listingId) {
-      query.listingId = listingId;
-    }
+		if (!listingId) {
+			throw new Error("Listing ID is missing in the parameters");
+		}
 
-    if (userId) {
-      query.userId = userId;
-    }
+		if (authorId) {
+			query.listing = { userId: authorId };
+		}
 
-    if (authorId) {
-      query.listing = { userId: authorId };
-    }
+		const reservations = await reservationServices.getReservationsById(
+			listingId
+		);
 
-    return await reservationServices.getAllReservations(query);
-  } catch (error: any) {
-    throw new Error(error);
-  }
+		if (!reservations) {
+			return null;
+		}
+
+		return reservations;
+	} catch (error: any) {
+		throw new Error(error);
+	}
 }

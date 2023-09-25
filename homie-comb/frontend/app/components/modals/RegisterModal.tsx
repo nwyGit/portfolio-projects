@@ -44,6 +44,7 @@ const RegisterModal = () => {
       await authServices.registerUser(formData as userForm);
       toast.success("Account registered");
       registerModal.onClose();
+      loginModal.onOpen();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
