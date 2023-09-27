@@ -1,21 +1,22 @@
 package com.raymondNg.homieComb.model.http.listing;
 
 import com.raymondNg.homieComb.model.database.listing.Location;
+import com.raymondNg.homieComb.model.http.user.UserDTO;
 
 import java.util.Date;
 
-public record ListingListDTOResponse(
+public record ListingListDTO(
          Long id,
          String title,
          String description,
          String imageKey,
          String category,
-         int room,
-         int bathroom,
-         int guest_allowed,
+         int guestCount,
+         int roomCount,
+         int bathroomCount,
          int price,
-         Date createdAt,
+         String createdAt,
          Location location,
-         Long user_id
+         UserDTO user
 ) {
 }

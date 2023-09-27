@@ -75,7 +75,7 @@ export default async function getListings(params: IListingsParams) {
       };
     }
 
-    return await listingServices.getAllListings(query);
+    return await listingServices.getListingsWithParams(query);
   } catch (error: any) {
     throw new Error(error);
   }

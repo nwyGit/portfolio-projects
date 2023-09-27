@@ -16,9 +16,11 @@ import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
 import Heading from "../Heading";
 
-import listingServices from "@/app/services/listing";
 import { categories } from "@/app/data/categories";
 import { Listing } from "@/app/types";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/app/redux/store";
+import { addProperty } from "@/app/redux/reducers/propertiesReducer";
 
 enum STEPS {
   CATEGORY = 0,
@@ -30,6 +32,9 @@ enum STEPS {
 }
 
 const RentModal = () => {
+  const currentUser = useAppSelector((state) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+
   const router = useRouter();
   const rentModal = useRentModal();
 
@@ -48,9 +53,9 @@ const RentModal = () => {
     defaultValues: {
       category: "",
       location: null,
-      guestCount: 0,
-      roomCount: 0,
-      bathroomCount: 0,
+      guestCount: 1,
+      roomCount: 1,
+      bathroomCount: 1,
       imageKey: "",
       price: 0,
       title: "",
@@ -97,9 +102,9 @@ const RentModal = () => {
     setIsLoading(true);
 
     try {
-      await listingServices.addListing(data as Listing);
+      await dispatch(addProperty(data as Listing));
       toast.success("Listing created");
-      router.refresh();
+      router.push("/properties");
       reset();
       setStep(STEPS.CATEGORY);
       rentModal.onClose();

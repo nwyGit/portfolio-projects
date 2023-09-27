@@ -1,23 +1,22 @@
 "use client";
 
-import { toast } from "react-hot-toast";
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import Heading from "@/app/components/Heading";
-import Container from "@/app/components/Container";
-import ListingCard from "@/app/components/listings/ListingCard";
-import EmptyState from "../components/EmptyState";
 import { AppDispatch, useAppSelector } from "../redux/store";
 import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import EmptyState from "../components/EmptyState";
+import Heading from "../components/Heading";
+import ListingCard from "../components/listings/ListingCard";
+import Container from "../components/Container";
+import toast from "react-hot-toast";
 import {
-  cancelReservation,
-  setReservations,
-} from "../redux/reducers/reservationsReducer";
+  deleteProperty,
+  setProperties,
+} from "../redux/reducers/propertiesReducer";
 
-const ReservationsClient = () => {
+const PropertyClient = () => {
   const currentUser = useAppSelector((state) => state.user);
-  const reservations = useAppSelector((state) => state.reservations);
+  const properties = useAppSelector((state) => state.properties);
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
@@ -25,7 +24,7 @@ const ReservationsClient = () => {
 
   useEffect(() => {
     if (currentUser?.username) {
-      dispatch(setReservations(currentUser.username));
+      dispatch(setProperties(currentUser.username));
     }
   }, [currentUser, dispatch]);
 
@@ -34,8 +33,8 @@ const ReservationsClient = () => {
       setDeletingId(id);
 
       try {
-        await dispatch(cancelReservation(id));
-        toast.success("Reservation cancelled");
+        await dispatch(deleteProperty(id));
+        toast.success("Property deleted");
         router.refresh();
       } catch (error) {
         toast.error("Something went wrong");
@@ -50,18 +49,18 @@ const ReservationsClient = () => {
     return <EmptyState title="Unauthorized" subtitle="Please login" />;
   }
 
-  if (reservations.length === 0) {
+  if (properties.length === 0) {
     return (
       <EmptyState
-        title="No reservations found"
-        subtitle="Looks like you have no reservations on your properties."
+        title="No properties found"
+        subtitle="Looks like you haven no properties."
       />
     );
   }
 
   return (
     <Container>
-      <Heading title="Reservations" subtitle="Bookings on your properties" />
+      <Heading title="Properties" subtitle="List of your properties" />
       <div
         className="
           mt-10
@@ -75,15 +74,14 @@ const ReservationsClient = () => {
           gap-8
         "
       >
-        {reservations.map((reservation: any) => (
+        {properties.map((property: any) => (
           <ListingCard
-            key={reservation.id}
-            data={reservation.listing}
-            reservation={reservation}
-            actionId={reservation.id}
+            key={property.id}
+            data={property}
+            actionId={property.id}
             onAction={onCancel}
-            disabled={deletingId === reservation.id}
-            actionLabel="Cancel guest reservation"
+            disabled={deletingId === property.id}
+            actionLabel="Delete property"
           />
         ))}
       </div>
@@ -91,4 +89,4 @@ const ReservationsClient = () => {
   );
 };
 
-export default ReservationsClient;
+export default PropertyClient;

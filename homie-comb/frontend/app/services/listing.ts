@@ -1,9 +1,17 @@
 import axios from "axios";
-import jwtDecode from "jwt-decode";
 
-import { Listing, currentUser } from "../types";
+import { Listing } from "../types";
+import { config, decodedToken } from "./auth";
 
-const getAllListings = async (query: any) => {
+const getAllListings = async () => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/listings`,
+  );
+
+  return response.data;
+};
+
+const getListingsWithParams = async (query: any) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/listings`,
     { params: query },
@@ -21,18 +29,35 @@ const getListingById = async (id: number) => {
 };
 
 const addListing = async (listing: Listing) => {
-  const token = localStorage.getItem("access_token");
-  const decodedToken: currentUser | null = token ? jwtDecode(token) : null;
-
   const newListing = {
     ...listing,
     location: listing.location.value,
     email: decodedToken?.sub,
   };
 
-  await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/listings`, newListing);
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/listings`,
+    newListing,
+    {
+      ...config,
+    },
+  );
+
+  return response.data;
 };
 
-const listingServices = { getAllListings, getListingById, addListing };
+const deleteListing = async (id: number) => {
+  await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/listings/${id}`, {
+    ...config,
+  });
+};
+
+const listingServices = {
+  getAllListings,
+  getListingById,
+  getListingsWithParams,
+  addListing,
+  deleteListing,
+};
 
 export default listingServices;

@@ -1,33 +1,37 @@
 "use client";
 
 import { toast } from "react-hot-toast";
-import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Heading from "@/app/components/Heading";
 import Container from "@/app/components/Container";
 import ListingCard from "@/app/components/listings/ListingCard";
-import { AppDispatch, useAppSelector } from "../store";
+import { AppDispatch, useAppSelector } from "../redux/store";
 import EmptyState from "../components/EmptyState";
-import reservationServices from "../services/reservation";
 import { useDispatch } from "react-redux";
-import { deleteUserTrips } from "../reducers/userReducer";
+import { deleteTrip, setTrips } from "../redux/reducers/tripsReducer";
 
 const TripsClient = () => {
 	const currentUser = useAppSelector((state) => state.user);
+	const trips = useAppSelector((state) => state.trips);
 	const dispatch = useDispatch<AppDispatch>();
 
 	const router = useRouter();
 	const [deletingId, setDeletingId] = useState(0);
+
+	useEffect(() => {
+		if (currentUser?.username) {
+			dispatch(setTrips(currentUser.username));
+		}
+	}, [currentUser, dispatch]);
 
 	const onCancel = useCallback(
 		async (id: number) => {
 			setDeletingId(id);
 
 			try {
-				await reservationServices.deleteReservation(id);
-				dispatch(deleteUserTrips(id));
+				await dispatch(deleteTrip(id));
 				toast.success("Reservation cancelled");
 				router.refresh();
 			} catch (error) {
@@ -39,11 +43,11 @@ const TripsClient = () => {
 		[dispatch, router]
 	);
 
-	if (!currentUser) {
+	if (!currentUser?.sub) {
 		return <EmptyState title="Unauthorized" subtitle="Please login" />;
 	}
 
-	if (currentUser.trips.length === 0) {
+	if (trips.length === 0) {
 		return (
 			<EmptyState
 				title="No trips found"
@@ -71,7 +75,7 @@ const TripsClient = () => {
           gap-8
         "
 			>
-				{currentUser.trips.map((reservation: any) => (
+				{trips.map((reservation: any) => (
 					<ListingCard
 						key={reservation.id}
 						data={reservation.listing}

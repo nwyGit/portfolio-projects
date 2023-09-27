@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 
@@ -8,28 +8,39 @@ import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
-import { AppDispatch, useAppSelector } from "@/app/store";
+import { AppDispatch, useAppSelector } from "@/app/redux/store";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/app/reducers/userReducer";
+import { setUser } from "@/app/redux/reducers/userReducer";
 import useListingModal from "@/app/hooks/useListingModal";
+import toast from "react-hot-toast";
 
 const UserMenu = () => {
-  const router = useRouter();
   const currentUser = useAppSelector((state) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+
+  const router = useRouter();
 
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const listingModal = useListingModal();
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    // const loggedUserJSON = localStorage.getItem("access_token");
+    // if (loggedUserJSON) {
+    // 	dispatch(setUser(loggedUserJSON));
+    // }
+  }, [dispatch]);
+
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
 
-  const signOut = () => {
-    dispatch(setUser(null));
+  const signOut = async () => {
     router.push("/");
+    toast.success("Logged out");
+    await dispatch(setUser("logout"));
+    toggleOpen();
   };
 
   return (
@@ -39,19 +50,19 @@ const UserMenu = () => {
           <span>{currentUser?.username}</span>
         </div>
         <div
-          onClick={() => toggleOpen()}
+          onClick={toggleOpen}
           className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <Avatar src={currentUser?.avatarKey} />
+            <Avatar src={currentUser?.avatarKey as string} />
           </div>
         </div>
       </div>
       {isOpen && (
         <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw] bg-white overflow-hidden right-0 top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
-            {currentUser ? (
+            {currentUser?.sub ? (
               <>
                 <MenuItem
                   onClick={() => router.push("/trips")}
@@ -71,7 +82,7 @@ const UserMenu = () => {
                 />
                 <MenuItem label="Become a host" onClick={listingModal.onOpen} />
                 <hr />
-                <MenuItem label="Logout" onClick={() => signOut()} />
+                <MenuItem label="Logout" onClick={signOut} />
               </>
             ) : (
               <>

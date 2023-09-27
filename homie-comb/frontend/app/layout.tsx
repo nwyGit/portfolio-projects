@@ -1,3 +1,5 @@
+"use client";
+
 import RegisterModal from "./components/modals/RegisterModal";
 import Navbar from "./components/navbar/Navbar";
 import "./globals.css";
@@ -6,7 +8,7 @@ import { Nunito } from "next/font/google";
 import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/modals/LoginModal";
 import ClientOnly from "./components/ClientOnly";
-import { ReduxProvider } from "./components/ReduxProvider";
+import { ReduxProvider } from "./redux/ReduxProvider";
 import ListingModal from "./components/modals/ListingModal";
 
 const font = Nunito({ subsets: ["latin"] });
