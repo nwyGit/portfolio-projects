@@ -32,7 +32,6 @@ enum STEPS {
 }
 
 const RentModal = () => {
-  const currentUser = useAppSelector((state) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();

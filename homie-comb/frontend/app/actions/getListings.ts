@@ -2,80 +2,65 @@ import listingServices from "../services/listing";
 
 export interface IListingsParams {
   userId?: string;
-  guestCount?: number;
   roomCount?: number;
   bathroomCount?: number;
+  guestCount?: number;
   startDate?: string;
   endDate?: string;
-  locationValue?: string;
+  location?: string;
   category?: string;
 }
 
 export default async function getListings(params: IListingsParams) {
   try {
     const {
-      userId,
+      category,
       roomCount,
-      guestCount,
       bathroomCount,
-      locationValue,
+      guestCount,
+      location,
       startDate,
       endDate,
-      category,
     } = params;
 
     let query: any = {};
-
-    if (userId) {
-      query.userId = userId;
-    }
+    let listings;
 
     if (category) {
       query.category = category;
     }
 
     if (roomCount) {
-      query.roomCount = {
-        gte: +roomCount,
-      };
-    }
-
-    if (guestCount) {
-      query.guestCount = {
-        gte: +guestCount,
-      };
+      query.roomCount = roomCount;
     }
 
     if (bathroomCount) {
-      query.bathroomCount = {
-        gte: +bathroomCount,
-      };
+      query.bathroomCount = bathroomCount;
+    }
+    if (guestCount) {
+      query.guestCount = guestCount;
     }
 
-    if (locationValue) {
-      query.locationValue = locationValue;
+    if (location) {
+      query.location = location;
     }
 
     if (startDate && endDate) {
-      query.NOT = {
-        reservations: {
-          some: {
-            OR: [
-              {
-                endDate: { gte: startDate },
-                startDate: { lte: startDate },
-              },
-              {
-                startDate: { lte: endDate },
-                endDate: { gte: endDate },
-              },
-            ],
-          },
-        },
-      };
+      query.startDate = startDate;
+      query.endDate = endDate;
     }
 
-    return await listingServices.getListingsWithParams(query);
+    if (Object.keys(params).length === 0) {
+      listings = await listingServices.getAllListings();
+    } else {
+      listings = await listingServices.getListingsWithParams(query);
+    }
+
+    if (!listings) {
+      return null;
+    }
+
+    return listings;
   } catch (error: any) {
     throw new Error(error);
   }

@@ -13,7 +13,7 @@ const getAllListings = async () => {
 
 const getListingsWithParams = async (query: any) => {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/listings`,
+    `${process.env.NEXT_PUBLIC_API_URL}/listings/search`,
     { params: query },
   );
 

@@ -10,6 +10,7 @@ import LoginModal from "./components/modals/LoginModal";
 import ClientOnly from "./components/ClientOnly";
 import { ReduxProvider } from "./redux/ReduxProvider";
 import ListingModal from "./components/modals/ListingModal";
+import SearchModal from "./components/modals/SearchModal";
 
 const font = Nunito({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             <RegisterModal />
             <LoginModal />
             <ListingModal />
+            <SearchModal />
             <Navbar />
           </ClientOnly>
           <div className="pb-20 pt-28">{children}</div>

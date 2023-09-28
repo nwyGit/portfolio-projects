@@ -20,109 +20,109 @@ import { setUser } from "@/app/redux/reducers/userReducer";
 import { Credentials } from "@/app/types";
 
 const LoginModal = () => {
-	const dispatch = useDispatch<AppDispatch>();
-	const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
-	const loginModal = useLoginModal();
-	const registerModal = useRegisterModal();
-	const [isLoading, setIsLoading] = useState(false);
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
+  const [isLoading, setIsLoading] = useState(false);
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<FieldValues>({
-		defaultValues: {
-			email: "",
-			password: "",
-		},
-	});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-	const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
-		setIsLoading(true);
+  const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
+    setIsLoading(true);
 
-		try {
-			await dispatch(setUser(formData as Credentials));
-			toast.success("Logged in");
-			router.refresh();
-			loginModal.onClose();
-		} catch (error) {
-			toast.error("Wrong credentials");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+    try {
+      await dispatch(setUser(formData as Credentials));
+      toast.success("Logged in");
+      router.refresh();
+      loginModal.onClose();
+    } catch (error) {
+      toast.error("Wrong credentials");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-	const onToggle = useCallback(() => {
-		loginModal.onClose();
-		registerModal.onOpen();
-	}, [loginModal, registerModal]);
+  const onToggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
 
-	const bodyContent = (
-		<div className="flex flex-col gap-4">
-			<Heading title="Welcome back" subtitle="Login to your account !" />
-			<Input
-				id="email"
-				label="Email"
-				disabled={isLoading}
-				register={register}
-				errors={errors}
-				required
-			/>
-			<Input
-				id="password"
-				label="Password"
-				type="password"
-				disabled={isLoading}
-				register={register}
-				errors={errors}
-				required
-			/>
-		</div>
-	);
+  const bodyContent = (
+    <div className="flex flex-col gap-4">
+      <Heading title="Welcome back" subtitle="Login to your account !" />
+      <Input
+        id="email"
+        label="Email"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="password"
+        label="Password"
+        type="password"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+    </div>
+  );
 
-	const footerContent = (
-		<div className="flex flex-col gap-4 mt-3">
-			<hr />
-			<Button
-				outline
-				label="Continue with Google"
-				icon={FcGoogle}
-				onClick={() => {}}
-			/>
-			<Button
-				outline
-				label="Continue with Github"
-				icon={AiFillGithub}
-				onClick={() => {}}
-			/>
-			<div className="text-neutral-500 text-center mt-4 font-light">
-				<p>
-					First time using HomieComb?
-					<span
-						onClick={onToggle}
-						className="text-neutral-800 cursor-pointer hover:underline"
-					>
-						{" "}
-						Create an account
-					</span>
-				</p>
-			</div>
-		</div>
-	);
+  const footerContent = (
+    <div className="flex flex-col gap-4 mt-3">
+      <hr />
+      <Button
+        outline
+        label="Continue with Google"
+        icon={FcGoogle}
+        onClick={() => {}}
+      />
+      <Button
+        outline
+        label="Continue with Github"
+        icon={AiFillGithub}
+        onClick={() => {}}
+      />
+      <div className="text-neutral-500 text-center mt-4 font-light">
+        <p>
+          First time using HomieComb?
+          <span
+            onClick={onToggle}
+            className="text-neutral-800 cursor-pointer hover:underline"
+          >
+            {" "}
+            Create an account
+          </span>
+        </p>
+      </div>
+    </div>
+  );
 
-	return (
-		<Modal
-			disabled={isLoading}
-			isOpen={loginModal.isOpen}
-			title="Login"
-			actionLabel="Continue"
-			onClose={loginModal.onClose}
-			onSubmit={handleSubmit(onSubmit)}
-			body={bodyContent}
-			footer={footerContent}
-		/>
-	);
+  return (
+    <Modal
+      disabled={isLoading}
+      isOpen={loginModal.isOpen}
+      title="Login"
+      actionLabel="Continue"
+      onClose={loginModal.onClose}
+      onSubmit={handleSubmit(onSubmit)}
+      body={bodyContent}
+      footer={footerContent}
+    />
+  );
 };
 
 export default LoginModal;

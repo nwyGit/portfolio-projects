@@ -1,28 +1,17 @@
-"use client";
 import Container from "@/app/components/Container";
 import ListingCard from "@/app/components/listings/ListingCard";
 import EmptyState from "@/app/components/EmptyState";
 
 import getListings, { IListingsParams } from "@/app/actions/getListings";
 import ClientOnly from "./components/ClientOnly";
-import { AppDispatch, useAppSelector } from "./redux/store";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { initializeListings } from "./redux/reducers/listingsReducer";
 
 interface HomeProps {
   searchParams: IListingsParams;
 }
 
-const Home = ({ searchParams }: HomeProps) => {
-  const listings = useAppSelector((state) => state.listings);
-  const dispatch = useDispatch<AppDispatch>();
+const Home = async ({ searchParams }: HomeProps) => {
+  const listings = await getListings(searchParams);
 
-  useEffect(() => {
-    dispatch(initializeListings());
-  }, [dispatch]);
-
-  //await getListings(searchParams);
   if (listings.length === 0) {
     return (
       <ClientOnly>

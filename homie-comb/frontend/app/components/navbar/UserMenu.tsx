@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/app/redux/reducers/userReducer";
 import useListingModal from "@/app/hooks/useListingModal";
 import toast from "react-hot-toast";
+import { setFavorites } from "@/app/redux/reducers/favoritesReducer";
 
 const UserMenu = () => {
   const currentUser = useAppSelector((state) => state.user);
@@ -36,18 +37,27 @@ const UserMenu = () => {
     setIsOpen(!isOpen);
   }, [isOpen]);
 
+  const onRent = useCallback(() => {
+    if (!currentUser.sub) {
+      return loginModal.onOpen();
+    }
+
+    listingModal.onOpen();
+  }, [currentUser, listingModal, loginModal]);
+
   const signOut = async () => {
     router.push("/");
     toast.success("Logged out");
-    await dispatch(setUser("logout"));
+    await dispatch(setFavorites(""));
+    await dispatch(setUser(""));
     toggleOpen();
   };
 
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
-        <div className="hidden md:block py-3 px-4">
-          <span>{currentUser?.username}</span>
+        <div className="hidden lg:block text-sm font-semibold py-3 px-4">
+          <span>{currentUser?.sub ? currentUser.username : null}</span>
         </div>
         <div
           onClick={toggleOpen}
@@ -60,7 +70,7 @@ const UserMenu = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw] bg-white overflow-hidden right-0 top-12 text-sm">
+        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw]  bg-white overflow-hidden left-0 md:left-auto md:right-0 top-14 md:top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
             {currentUser?.sub ? (
               <>

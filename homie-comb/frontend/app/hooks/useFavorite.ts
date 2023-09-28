@@ -5,7 +5,10 @@ import { toast } from "react-hot-toast";
 import useLoginModal from "./useLoginModal";
 import { AppDispatch, useAppSelector } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { setFavorites, updateFavorites } from "../redux/reducers/favoritesReducer";
+import {
+  setFavorites,
+  updateFavorites,
+} from "../redux/reducers/favoritesReducer";
 
 const useFavorite = (listingId: number) => {
   const router = useRouter();
@@ -25,7 +28,7 @@ const useFavorite = (listingId: number) => {
     async (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
 
-      if (!currentUser.sub) {
+      if (!currentUser?.sub) {
         return loginModal.onOpen();
       }
 
