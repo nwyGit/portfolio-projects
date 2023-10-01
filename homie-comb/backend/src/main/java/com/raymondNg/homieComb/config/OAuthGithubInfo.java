@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(
         prefix = "oauth.github"
 )
-public class GithubOAuthConfig {
+public class OAuthGithubConfig {
     private String accessTokenUrl;
     private String userInfoUrl;
     private String clientId;

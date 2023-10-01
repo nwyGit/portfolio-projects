@@ -4,8 +4,10 @@ import { config } from "./auth";
 
 const uploadImage = async (image: any) => {
   const updatedConfig = {
-    ...config,
-    "Content-Type": "multipart/form-data",
+    headers: {
+      ...config()?.headers,
+      "Content-Type": "multipart/form-data",
+    },
   };
 
   const response = await axios.post(

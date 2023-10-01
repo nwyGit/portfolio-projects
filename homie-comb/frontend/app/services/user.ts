@@ -5,7 +5,7 @@ import { config } from "./auth";
 const getUserFavorites = async (username: string) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/favorites`,
-    { ...config },
+    { ...config() },
   );
 
   return response.data;
@@ -18,14 +18,14 @@ const updateUserFavorites = async (
   await axios.put(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/favorites`,
     { newFavorites },
-    { ...config },
+    { ...config() },
   );
 };
 
 const getUserTrips = async (username: string) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/trips`,
-    { ...config },
+    { ...config() },
   );
   return response.data;
 };
@@ -33,7 +33,7 @@ const getUserTrips = async (username: string) => {
 const getUserReservations = async (username: string) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/reservations`,
-    { ...config },
+    { ...config() },
   );
 
   return response.data;
@@ -42,7 +42,7 @@ const getUserReservations = async (username: string) => {
 const getUserProperties = async (username: string) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${username}/listings`,
-    { ...config },
+    { ...config() },
   );
 
   return response.data;

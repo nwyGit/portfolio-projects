@@ -12,13 +12,13 @@ const getReservationsByListingId = async (listingId: number) => {
 const addTrip = async (data: Reservation) => {
   const newReservation = {
     ...data,
-    email: decodedToken?.sub,
+    email: decodedToken()?.sub,
   };
 
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/reservations`,
     newReservation,
-    { ...config },
+    { ...config() },
   );
 
   return response.data;
@@ -26,7 +26,7 @@ const addTrip = async (data: Reservation) => {
 
 const deleteReservation = async (id: number) => {
   await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/reservations/${id}`, {
-    ...config,
+    ...config(),
   });
 };
 

@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(
         prefix = "oauth.google"
 )
-public class GoogleOAuthConfig {
+public class OAuthGoogleConfig {
+    private String accessTokenUrl;
+    private String userInfoUrl;
     private String clientId;
     private String clientSecret;
 }

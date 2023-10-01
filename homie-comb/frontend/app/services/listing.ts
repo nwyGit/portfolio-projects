@@ -32,14 +32,14 @@ const addListing = async (listing: Listing) => {
   const newListing = {
     ...listing,
     location: listing.location.value,
-    email: decodedToken?.sub,
+    email: decodedToken()?.sub,
   };
 
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/listings`,
     newListing,
     {
-      ...config,
+      ...config(),
     },
   );
 
@@ -48,7 +48,7 @@ const addListing = async (listing: Listing) => {
 
 const deleteListing = async (id: number) => {
   await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/listings/${id}`, {
-    ...config,
+    ...config(),
   });
 };
 
