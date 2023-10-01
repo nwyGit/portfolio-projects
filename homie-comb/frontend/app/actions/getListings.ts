@@ -1,7 +1,6 @@
 import listingServices from "../services/listing";
 
 export interface IListingsParams {
-  userId?: string;
   roomCount?: number;
   bathroomCount?: number;
   guestCount?: number;

@@ -20,7 +20,7 @@ export const { initializeListingsReducer } = listingsSlice.actions;
 export const initializeListings = () => {
   return async (dispatch: AppDispatch) => {
     try {
-      const listings = await listingServices.getAllListings({});
+      const listings = await listingServices.getAllListings();
       dispatch(initializeListingsReducer(listings));
     } catch (error) {
       throw error;
