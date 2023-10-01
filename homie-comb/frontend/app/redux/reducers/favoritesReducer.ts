@@ -17,14 +17,14 @@ const favoritesSlice = createSlice({
 
 export const { setFavoritesReducer } = favoritesSlice.actions;
 
-export const setFavorites = (username: string) => {
+export const setFavorites = (username: string | null) => {
   return async (dispatch: AppDispatch) => {
     try {
-      if (username.length === 0) {
-        dispatch(setFavoritesReducer(initialState));
-      } else {
+      if (typeof username == "string") {
         const favoriteObj = await userServices.getUserFavorites(username);
         dispatch(setFavoritesReducer(favoriteObj));
+      } else {
+        dispatch(setFavoritesReducer(initialState));
       }
     } catch (error) {
       throw error;

@@ -14,9 +14,11 @@ const Avatar: React.FC<AvatarProps> = ({ src }) => {
       height="30"
       width="30"
       alt="Avatar"
-      src={`${process.env.NEXT_PUBLIC_S3_AVATAR_URL}/${
-        src ? src : "avatar_default.jpg"
-      }`}
+      src={
+        src
+          ? `${process.env.NEXT_PUBLIC_S3_AVATAR_URL}/${src}`
+          : "/images/placeholder.jpg"
+      }
     />
   );
 };

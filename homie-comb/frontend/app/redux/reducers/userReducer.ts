@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import authServices from "@/app/services/auth";
 
 import { AppDispatch } from "../store";
@@ -26,25 +26,28 @@ const userSlice = createSlice({
 
 export const { setUserReducer } = userSlice.actions;
 
-export const setUser = (credentials: Credentials | string) => {
+export const setUserByCredentials = (credentials: Credentials | null) => {
   return async (dispatch: AppDispatch) => {
     try {
-      const typeOfCredentials = typeof credentials;
-      if (typeOfCredentials == "object") {
-        const token = await authServices.loginUser(credentials as Credentials);
-        localStorage.setItem("access_token", token);
-        const decodedToken: currentUser = jwtDecode(token);
-        dispatch(setUserReducer(decodedToken));
-        dispatch(setFavorites(decodedToken.username));
+      if (credentials == null) {
+        dispatch(setUserReducer(initialState));
       } else {
-        if (credentials === "") {
-          dispatch(setUserReducer(initialState));
-        } else {
-          const decodedToken: currentUser = jwtDecode(credentials as string);
-          dispatch(setUserReducer(decodedToken));
-          dispatch(setFavorites(decodedToken.username));
-        }
+        const token = await authServices.loginUser(credentials as Credentials);
+        dispatch(setUserByToken(token));
       }
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const setUserByToken = (token: string) => {
+  return async (dispatch: AppDispatch) => {
+    try {
+      localStorage.setItem("access_token", token);
+      const decodedToken: currentUser = jwtDecode(token);
+      dispatch(setUserReducer(decodedToken));
+      dispatch(setFavorites(decodedToken.username));
     } catch (error) {
       throw error;
     }

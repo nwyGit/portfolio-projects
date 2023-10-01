@@ -16,8 +16,9 @@ import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
 import { AppDispatch } from "@/app/redux/store";
-import { setUser } from "@/app/redux/reducers/userReducer";
+import { setUserByCredentials } from "@/app/redux/reducers/userReducer";
 import { Credentials } from "@/app/types";
+import authServices from "@/app/services/auth";
 
 const LoginModal = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,7 +43,7 @@ const LoginModal = () => {
     setIsLoading(true);
 
     try {
-      await dispatch(setUser(formData as Credentials));
+      await dispatch(setUserByCredentials(formData as Credentials));
       toast.success("Logged in");
       router.refresh();
       loginModal.onClose();
@@ -88,13 +89,13 @@ const LoginModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => authServices.authenticateWithGoogle()}
       />
       <Button
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => authServices.authenticateWithGithub()}
       />
       <div className="text-neutral-500 text-center mt-4 font-light">
         <p>

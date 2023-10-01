@@ -10,7 +10,10 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { AppDispatch, useAppSelector } from "@/app/redux/store";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/app/redux/reducers/userReducer";
+import {
+  setUserByCredentials,
+  setUserByToken,
+} from "@/app/redux/reducers/userReducer";
 import useListingModal from "@/app/hooks/useListingModal";
 import toast from "react-hot-toast";
 import { setFavorites } from "@/app/redux/reducers/favoritesReducer";
@@ -27,29 +30,21 @@ const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // const loggedUserJSON = localStorage.getItem("access_token");
-    // if (loggedUserJSON) {
-    // 	dispatch(setUser(loggedUserJSON));
-    // }
+    const loggedUserJSON = localStorage.getItem("access_token");
+    if (loggedUserJSON) {
+      dispatch(setUserByToken(loggedUserJSON));
+    }
   }, [dispatch]);
 
   const toggleOpen = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
 
-  const onRent = useCallback(() => {
-    if (!currentUser.sub) {
-      return loginModal.onOpen();
-    }
-
-    listingModal.onOpen();
-  }, [currentUser, listingModal, loginModal]);
-
   const signOut = async () => {
     router.push("/");
     toast.success("Logged out");
-    await dispatch(setFavorites(""));
-    await dispatch(setUser(""));
+    await dispatch(setFavorites(null));
+    await dispatch(setUserByCredentials(null));
     toggleOpen();
   };
 
