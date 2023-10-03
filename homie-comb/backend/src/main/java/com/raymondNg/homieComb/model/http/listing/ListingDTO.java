@@ -3,9 +3,7 @@ package com.raymondNg.homieComb.model.http.listing;
 import com.raymondNg.homieComb.model.database.listing.Location;
 import com.raymondNg.homieComb.model.http.user.UserDTO;
 
-import java.util.Date;
-
-public record ListingListDTO(
+public record ListingDTO(
          Long id,
          String title,
          String description,

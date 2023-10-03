@@ -1,18 +1,11 @@
 package com.raymondNg.homieComb.model.http.user;
 
-import com.raymondNg.homieComb.model.http.listing.ListingListDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.raymondNg.homieComb.model.http.listing.ListingDTO;
 
 import java.util.List;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserFavoritesResponse {
-    long[] ids;
-    List<ListingListDTO> listings;
+public record UserFavoritesDTO(
+        long[] ids,
+        List<ListingDTO> listings
+) {
 }

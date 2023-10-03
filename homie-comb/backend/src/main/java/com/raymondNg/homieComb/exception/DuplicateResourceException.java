@@ -1,9 +1,13 @@
-package com.raymondNg.homieComb.exception;/**
-* ClassName: DuplicateResourceException
-* Package: com.raymondNg.homieComb.exception
-* Description:
-* @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-22 22:19
-* @Version 1.0
-*/public class DuplicateResourceException {
+package com.raymondNg.homieComb.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(
+        code = HttpStatus.CONFLICT
+)
+public class DuplicateResourceException extends RuntimeException {
+    public DuplicateResourceException(String message) {
+        super(message);
+    }
 }

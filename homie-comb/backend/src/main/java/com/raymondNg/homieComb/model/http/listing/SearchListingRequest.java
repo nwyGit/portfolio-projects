@@ -1,12 +1,14 @@
 package com.raymondNg.homieComb.model.http.listing;
 
-public record SearchRequest(
-        String category,
-        int roomCount,
-        int guestCount,
-        int bathroomCount,
-        String location,
-        String startDate,
-        String endDate
+import org.springframework.lang.Nullable;
+
+public record SearchListingRequest(
+        @Nullable String category,
+        @Nullable int roomCount,
+        @Nullable int bathroomCount,
+        @Nullable int guestCount,
+        @Nullable String location,
+        @Nullable String startDate,
+        @Nullable String endDate
 ) {
 }

@@ -1,9 +1,11 @@
-package com.raymondNg.homieComb.exception;/**
-* ClassName: ApiError
-* Package: com.raymondNg.homieComb.exception
-* Description:
-* @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-24 23:57
-* @Version 1.0
-*/public record ApiError() {
+package com.raymondNg.homieComb.exception;
+
+import java.time.LocalDateTime;
+
+public record ApiError(
+        String path,
+        String message,
+        int statusCode,
+        LocalDateTime localDateTime
+) {
 }

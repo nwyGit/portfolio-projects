@@ -1,9 +1,13 @@
-package com.raymondNg.homieComb.exception;/**
-* ClassName: ResourceNotFoundException
-* Package: com.raymondNg.homieComb.exception
-* Description:
-* @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-19 15:43
-* @Version 1.0
-*/public class ResourceNotFoundException {
+package com.raymondNg.homieComb.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(
+        code = HttpStatus.NOT_FOUND
+)
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
 }

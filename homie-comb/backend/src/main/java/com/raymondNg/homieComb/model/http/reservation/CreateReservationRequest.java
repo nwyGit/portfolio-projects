@@ -1,11 +1,9 @@
 package com.raymondNg.homieComb.model.http.reservation;
 
-import java.util.Date;
-
-public record AddReservationRequest(
+public record CreateReservationRequest(
         int totalPrice,
-        Date startDate,
-        Date endDate,
+        String startDate,
+        String endDate,
         String email,
         long listingId
 ) {

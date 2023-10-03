@@ -1,9 +1,33 @@
-package com.raymondNg.homieComb.config;/**
-* ClassName: CorsConfig
-* Package: com.raymondNg.homieComb.config
-* Description:
-* @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-21 01:23
-* @Version 1.0
-*/public class CorsConfig {
+package com.raymondNg.homieComb.config;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+public class CorsConfig {
+    @Value("#{'${cors.allowed-origins}'.split(',')}")
+    private List<String> allowedOrigins;
+    @Value("#{'${cors.allowed-methods}'.split(',')}")
+    private List<String> allowedMethods;
+    @Value("#{'${cors.allowed-headers}'.split(',')}")
+    private List<String> allowedHeaders;
+    @Value("#{'${cors.exposed-headers}'.split(',')}")
+    private List<String> expectedHeaders;
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowedHeaders(allowedHeaders);
+        configuration.setExposedHeaders(expectedHeaders);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
+    }
 }

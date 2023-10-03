@@ -1,26 +1,19 @@
-package com.raymondNg.homieComb.model.user;
+package com.raymondNg.homieComb.model.database.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.raymondNg.homieComb.model.database.listing.Listing;
+import com.raymondNg.homieComb.model.database.reservation.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-/**
- * ClassName: User
- * Package: com.raymondNg.homieComb.model
- * Description:
- *
- * @Author Wai Yan(Raymond) Ng
- * @Create 2023-09-19 14:52
- * @Version 1.0
- */
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @Builder
@@ -29,39 +22,49 @@ import java.util.List;
 @Entity(name = "User")
 @Table(
         name = "_user",
-        uniqueConstraints = @UniqueConstraint(name = "email_unique", columnNames = "email")
+        uniqueConstraints = {
+                @UniqueConstraint(name = "username_unique", columnNames = {"username"}),
+                @UniqueConstraint(name = "email_unique", columnNames = {"email"}),
+                @UniqueConstraint(name = "avatar_key_unique", columnNames = {"avatar_key"})
+        }
 )
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(
-            name = "first_name",
-            nullable = false
-    )
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "first_name", nullable = false)
     private String firstname;
 
-    @Column(
-            name = "last_name",
-            nullable = false
-    )
+    @Column(name = "last_name", nullable = false)
     private String lastname;
 
-    @Column(
-            name = "email",
-            nullable = false
-    )
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(
-            name = "password",
-            nullable = false
-    )
+    @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
+
+    @Column(name = "avatar_key", nullable = false)
+    private String avatar_key;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<Listing> listings;
+
+    @Column(name = "favorites", nullable = false)
+    private long[] favorites;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<Reservation> reservations;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,6 +72,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -98,7 +102,13 @@ public class User implements UserDetails {
         return true;
     }
 
+    public String getAccountUsername() {
+        return this.username;
+    }
+
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

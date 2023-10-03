@@ -1,9 +1,11 @@
-package com.raymondNg.homieComb.repository;/**
-* ClassName: LocationRepository
-* Package: com.raymondNg.homieComb.repository
-* Description:
-* @Author Wai Yan(Raymond) Ng
-* @Create 2023-09-22 14:43
-* @Version 1.0
-*/public class LocationRepository {
+package com.raymondNg.homieComb.repository;
+
+import com.raymondNg.homieComb.model.database.listing.Location;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface LocationRepository extends JpaRepository<Location, Long> {
+    Optional<Location> findLocationByValue(String value);
 }
