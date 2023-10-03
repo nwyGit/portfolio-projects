@@ -65,7 +65,7 @@ const UserMenu = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw]  bg-white overflow-hidden left-0 md:left-auto md:right-0 top-14 md:top-12 text-sm">
+        <div className="absolute rounded-xl shadow-md w-[40vw] md:w-[20vw] lg:w-[10vw] bg-white overflow-hidden left-0 md:left-auto md:right-0 top-14 md:top-12 text-sm">
           <div className="flex flex-col cursor-pointer">
             {currentUser?.sub ? (
               <>
