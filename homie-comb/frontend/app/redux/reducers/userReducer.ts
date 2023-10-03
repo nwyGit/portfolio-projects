@@ -31,6 +31,7 @@ export const setUserByCredentials = (credentials: Credentials | null) => {
     try {
       if (credentials == null) {
         dispatch(setUserReducer(initialState));
+        authServices.signOutUser();
       } else {
         const token = await authServices.loginUser(credentials as Credentials);
         dispatch(setUserByToken(token));

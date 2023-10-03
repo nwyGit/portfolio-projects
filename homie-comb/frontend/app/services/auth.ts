@@ -55,8 +55,8 @@ const authenticateWithGithub = async () => {
   window.location.assign(oauthURL.toString());
 };
 
-const signOutUser = () => {
-  localStorage.removeItem("access_token");
+const signOutUser = async () => {
+  localStorage.clear();
 };
 
 const authServices = {

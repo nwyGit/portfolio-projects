@@ -41,10 +41,10 @@ const UserMenu = () => {
   }, [isOpen]);
 
   const signOut = async () => {
-    router.push("/");
-    toast.success("Logged out");
     await dispatch(setFavorites(null));
     await dispatch(setUserByCredentials(null));
+    toast.success("Logged out");
+    router.push("/");
     toggleOpen();
   };
 
