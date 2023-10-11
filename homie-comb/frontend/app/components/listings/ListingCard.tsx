@@ -76,7 +76,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             fill
             sizes="25vw"
             className="object-cover h-full w-full group-hover:scale-110 transition"
-            src={`${process.env.NEXT_PUBLIC_S3_LISTING_URL}/${data.imageKey}`}
+            src={`${process.env.NEXT_PUBLIC_S3_URL}/listings/${data.imageKey}`}
             alt="Listing"
           />
           <div className="absolute top-3 right-3">

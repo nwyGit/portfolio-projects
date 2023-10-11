@@ -16,7 +16,7 @@ const Avatar: React.FC<AvatarProps> = ({ src }) => {
       alt="Avatar"
       src={
         src
-          ? `${process.env.NEXT_PUBLIC_S3_AVATAR_URL}/${src}`
+          ? `${process.env.NEXT_PUBLIC_S3_URL}/avatars/${src}`
           : "/images/placeholder.jpg"
       }
     />

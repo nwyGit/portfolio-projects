@@ -8,7 +8,7 @@ const nextConfig = {
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
   },
   images: {
-    domains: ["homiecomb.s3.us-east-2.amazonaws.com"],
+    domains: ["d1f5djmdoem7hf.cloudfront.net"],
   },
 };
 

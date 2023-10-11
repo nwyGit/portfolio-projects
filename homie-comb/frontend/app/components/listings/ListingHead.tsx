@@ -32,7 +32,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
       />
       <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
         <Image
-          src={`${process.env.NEXT_PUBLIC_S3_LISTING_URL}/${imageSrc}`}
+          src={`${process.env.NEXT_PUBLIC_S3_URL}/listings/${imageSrc}`}
           fill
           className="object-cover w-full"
           alt="Image"
