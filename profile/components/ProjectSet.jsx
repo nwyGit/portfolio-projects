@@ -2,12 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/motion";
 import styles from "@/styles";
-import ProjectSet from "./ProjectSet";
-import { SDprojects } from "../data/projects";
+import Project from "./Project";
 
-const Projects = () => {
+const ProjectSet = ({ title, data }) => {
 	return (
-		<section id="Projects" className={`${styles.section} ${styles.paddings}`}>
+		<section>
 			<motion.div
 				variants={fadeIn("right", "tween", 0.6, 1)}
 				initial="hidden"
@@ -15,13 +14,16 @@ const Projects = () => {
 				viewport={{ once: true, amount: 0.1 }}
 				className="sm:space-y-2 relative"
 			>
-				<div>
-					<span className="text-3xl mr-6">| Projects</span>
+				<div className={`${styles.sectionHeader} mt-4`}>
+					<span className="text-2xl mr-6">{title}</span>
+					<hr className="flex-1 border-primary opacity-50" />
 				</div>
 			</motion.div>
-			<ProjectSet title="Software Development" data={SDprojects} />
+			{data.map((project, i) => (
+				<Project key={i} data={project} />
+			))}
 		</section>
 	);
 };
 
-export default Projects;
+export default ProjectSet;
