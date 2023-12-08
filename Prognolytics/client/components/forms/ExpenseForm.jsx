@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
 	FaCreditCard,
 	FaMoneyBillAlt,
 	FaShoppingCart,
 	FaStore,
-} from 'react-icons/fa';
-import { BsCalendar, BsList } from 'react-icons/bs';
-import { RiFileTextLine } from 'react-icons/ri';
-import { useForm } from 'react-hook-form';
-import { useAtom } from 'jotai';
+} from "react-icons/fa";
+import { BsCalendar, BsList } from "react-icons/bs";
+import { RiFileTextLine } from "react-icons/ri";
+import { useForm } from "react-hook-form";
+import { useAtom } from "jotai";
 import {
 	isEnterManuallyAtom,
 	isStartToScanAtom,
 	isUpdateRecordAtom,
-} from '@/state';
-import styles from '@/styles';
-import { Box, Button, IconButton, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { tokens } from '@/styles/theme';
-import AlertMessage from '../image-components/AlertMessage';
-import { createRecord, updateRecord } from '@/lib/recordService';
-import categories from '@/public/categories';
+} from "@/state";
+import styles from "@/styles";
+import { Box, Button, IconButton, useTheme } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { tokens } from "@/styles/theme";
+import AlertMessage from "../image-components/AlertMessage";
+import { createRecord, updateRecord } from "@/lib/recordService";
+import categories from "@/data/categories";
 
 const ReceiptForm = ({ receiptData, action }) => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
 	const [formData, setFormData] = useState(null);
-	const [imageURL, setImageUrl] = useState('');
+	const [imageURL, setImageUrl] = useState("");
 	const [isEnterManually, setIsEnterManually] = useAtom(isEnterManuallyAtom);
 	const [isStartToScan, setIsStartToScan] = useAtom(isStartToScanAtom);
 	const [, setIsUpdateRecord] = useAtom(isUpdateRecordAtom);
-	const [resMsg, setResMsg] = useState('');
+	const [resMsg, setResMsg] = useState("");
 
 	const {
 		register,
@@ -42,14 +42,14 @@ const ReceiptForm = ({ receiptData, action }) => {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			merchant: '',
-			category: '',
-			date: '',
-			description: '',
-			paymentMethod: '',
-			amount: '',
+			merchant: "",
+			category: "",
+			date: "",
+			description: "",
+			paymentMethod: "",
+			amount: "",
 			items: [],
-			imageURL: '',
+			imageURL: "",
 		},
 	});
 
@@ -63,12 +63,12 @@ const ReceiptForm = ({ receiptData, action }) => {
 		}
 	}, [receiptData, formData, setValue]);
 
-	const date = watch('date');
+	const date = watch("date");
 
 	const onSubmit = async (data) => {
-		if (action === 'Create') {
+		if (action === "Create") {
 			newRecord(data);
-		} else if (action === 'Update') {
+		} else if (action === "Update") {
 			modifyRecord(data);
 		}
 	};
@@ -86,7 +86,7 @@ const ReceiptForm = ({ receiptData, action }) => {
 			})
 			.catch((err) => {
 				console.log(err);
-				throw new Error('Failed to create receipt.');
+				throw new Error("Failed to create receipt.");
 			});
 	};
 
@@ -97,7 +97,7 @@ const ReceiptForm = ({ receiptData, action }) => {
 			})
 			.catch((err) => {
 				console.log(err);
-				throw new Error('Failed to update receipt.');
+				throw new Error("Failed to update receipt.");
 			});
 	};
 
@@ -112,14 +112,14 @@ const ReceiptForm = ({ receiptData, action }) => {
 
 	return (
 		<>
-			{resMsg && <AlertMessage resMsg={resMsg} type='success' />}
+			{resMsg && <AlertMessage resMsg={resMsg} type="success" />}
 			<Box className={`${styles.elementCenter}`}>
 				<Box
-					sx={{ backgroundColor: colors.primary[200], borderRadius: '25px' }}
+					sx={{ backgroundColor: colors.primary[200], borderRadius: "25px" }}
 					className={`${styles.expenseForm} overflow-hidden hover:overflow-auto overscroll-contain`}
 				>
 					<div className={`flex px-4 justify-between items-center`}>
-						<h1 className='text-2xl font-bold my-4'>{action} Expense</h1>
+						<h1 className="text-2xl font-bold my-4">{action} Expense</h1>
 						<IconButton
 							onClick={() => {
 								setIsStartToScan(false);
@@ -127,7 +127,7 @@ const ReceiptForm = ({ receiptData, action }) => {
 								setIsUpdateRecord(false);
 							}}
 						>
-							<CloseIcon sx={{ fontSize: '2rem' }} />
+							<CloseIcon sx={{ fontSize: "2rem" }} />
 						</IconButton>
 					</div>
 
@@ -136,30 +136,30 @@ const ReceiptForm = ({ receiptData, action }) => {
 							{formData && (
 								<div className={`${styles.flexCenter} px-4 pt-4`}>
 									<img
-										src={imageURL ? imageURL : ''}
-										alt='receipt image'
-										className='max-h-80'
+										src={imageURL ? imageURL : ""}
+										alt="receipt image"
+										className="max-h-80"
 									/>
 									<input
-										type='hidden'
-										value={'imageURL'}
-										{...register('imageURL')}
+										type="hidden"
+										value={"imageURL"}
+										{...register("imageURL")}
 									/>
 								</div>
 							)}
 						</div>
-						<div className='grid grid-cols-2 min-w-max'>
+						<div className="grid grid-cols-2 min-w-max">
 							<div className={`${styles.formInputPos}`}>
-								<label htmlFor='merchant'>Merchant name:</label>
-								<div className='relative mt-2'>
+								<label htmlFor="merchant">Merchant name:</label>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<FaStore className='h-5 w-5 text-gray-500' />
+										<FaStore className="h-5 w-5 text-gray-500" />
 									</span>
 									<input
-										type='text'
-										placeholder='Name'
-										{...register('merchant', { required: true })}
-										style={{ color: '#333' }}
+										type="text"
+										placeholder="Name"
+										{...register("merchant", { required: true })}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									/>
 								</div>
@@ -171,14 +171,14 @@ const ReceiptForm = ({ receiptData, action }) => {
 							</div>
 							<div className={`${styles.formInputPos}`}>
 								<label>Date:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<BsCalendar className='h-5 w-5 text-gray-500' />
+										<BsCalendar className="h-5 w-5 text-gray-500" />
 									</span>
 									<input
-										type='date'
-										{...register('date', { required: true })}
-										style={{ color: '#333' }}
+										type="date"
+										{...register("date", { required: true })}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									/>
 								</div>
@@ -195,13 +195,13 @@ const ReceiptForm = ({ receiptData, action }) => {
 							</div>
 							<div className={`${styles.formInputPos}`}>
 								<label>Category:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<BsList className='h-5 w-5 text-gray-500' />
+										<BsList className="h-5 w-5 text-gray-500" />
 									</span>
 									<select
-										{...register('category', { required: true })}
-										style={{ color: '#333' }}
+										{...register("category", { required: true })}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									>
 										{categories.map((category) => (
@@ -219,35 +219,35 @@ const ReceiptForm = ({ receiptData, action }) => {
 							</div>
 							<div className={`${styles.formInputPos}`}>
 								<label>Payment method:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<FaCreditCard className='h-5 w-5 text-gray-500' />
+										<FaCreditCard className="h-5 w-5 text-gray-500" />
 									</span>
 									<select
-										{...register('paymentMethod')}
-										style={{ color: '#333' }}
+										{...register("paymentMethod")}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									>
-										<option value='Cash'>Cash</option>
-										<option value='Credit Card'>Credit Card</option>
-										<option value='Debit Card'>Debit Card</option>
-										<option value='Check'>Check</option>
-										<option value='Other'>Other</option>
+										<option value="Cash">Cash</option>
+										<option value="Credit Card">Credit Card</option>
+										<option value="Debit Card">Debit Card</option>
+										<option value="Check">Check</option>
+										<option value="Other">Other</option>
 									</select>
 								</div>
 							</div>
 							<div className={`${styles.formInputPos} `}>
 								<label>Total amount:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<FaMoneyBillAlt className='h-5 w-5 text-gray-500' />
+										<FaMoneyBillAlt className="h-5 w-5 text-gray-500" />
 									</span>
 									<input
-										type='number'
-										placeholder='$34.87'
-										step='0.01'
-										{...register('amount', { required: true })}
-										style={{ color: '#333' }}
+										type="number"
+										placeholder="$34.87"
+										step="0.01"
+										{...register("amount", { required: true })}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									/>
 								</div>
@@ -259,16 +259,16 @@ const ReceiptForm = ({ receiptData, action }) => {
 							</div>
 							<div className={`${styles.formInputPos} row-span-2`}>
 								<label>Items:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<FaShoppingCart className='h-5 w-5 text-gray-500' />
+										<FaShoppingCart className="h-5 w-5 text-gray-500" />
 									</span>
 									<textarea
-										rows='8'
-										type='text'
-										placeholder='e.g. Onions, Potatoes, Garlic, Bananas'
-										{...register('items')}
-										style={{ color: '#333' }}
+										rows="8"
+										type="text"
+										placeholder="e.g. Onions, Potatoes, Garlic, Bananas"
+										{...register("items")}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									/>
 								</div>
@@ -280,16 +280,16 @@ const ReceiptForm = ({ receiptData, action }) => {
 							</div>
 							<div className={`${styles.formInputPos}`}>
 								<label>Description:</label>
-								<div className='relative mt-2'>
+								<div className="relative mt-2">
 									<span className={`${styles.formIcon}`}>
-										<RiFileTextLine className='h-5 w-5 text-gray-500' />
+										<RiFileTextLine className="h-5 w-5 text-gray-500" />
 									</span>
 									<textarea
-										rows='3'
-										type='number'
-										placeholder='e.g. Grocery shopping'
-										{...register('description')}
-										style={{ color: '#333' }}
+										rows="3"
+										type="number"
+										placeholder="e.g. Grocery shopping"
+										{...register("description")}
+										style={{ color: "#333" }}
 										className={`${styles.formInput}`}
 									/>
 								</div>
@@ -297,15 +297,15 @@ const ReceiptForm = ({ receiptData, action }) => {
 						</div>
 						<div className={`${styles.flexCenter}`}>
 							<Button
-								type='submit'
-								variant='contained'
-								size='large'
+								type="submit"
+								variant="contained"
+								size="large"
 								style={{
 									backgroundColor: colors.orangeAccent[400],
 								}}
 								sx={{
 									color: colors.primary[100],
-									m: '2rem 0 0 0',
+									m: "2rem 0 0 0",
 								}}
 							>
 								{action}

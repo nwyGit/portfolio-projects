@@ -21,6 +21,7 @@ import { authenticateUser } from '@/lib/authenticate';
 import { tokens } from '@/styles/theme';
 import styles from '@/styles';
 import BackgroundImage from '../image-components/BackgroundImage';
+import Loader from '../image-components/Loader';
 
 const LoginForm = () => {
 	// const { data: session } = useSession();
@@ -30,6 +31,7 @@ const LoginForm = () => {
 
 	const [resMsg, setResMsg] = useState('');
 	const [warning, setWarning] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
 	const reactHookFormMethods = useForm();
@@ -37,7 +39,9 @@ const LoginForm = () => {
 
 	const onSubmit = async (data) => {
 		try {
+			setIsLoading(true)
 			const msg = await authenticateUser(data);
+			setIsLoading(false);
 			setResMsg(msg);
 			setTimeout(() => {
 				router.push('/dashboard');
@@ -180,6 +184,7 @@ const LoginForm = () => {
 			<BackgroundImage ImageUrl='/formBackground.png' alt='login background' />
 			{resMsg && <AlertMessage resMsg={resMsg} type='success' />}
 			{warning && <AlertMessage resMsg={warning} type='error' />}
+			{isLoading && <Loader/>}
 		</>
 	);
 };

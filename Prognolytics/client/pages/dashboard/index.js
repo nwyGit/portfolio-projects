@@ -1,82 +1,117 @@
-import LineChart from '@/components/charts/LineChart';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import Header from '@/components/layout/Header';
-import StatBox from '@/components/StatBox';
-import { tokens } from '@/styles/theme';
-import { useTheme } from '@emotion/react';
+import LineChart from "@/components/charts/LineChart";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import Header from "@/components/layout/Header";
+import StatBox from "@/components/StatBox";
+import { tokens } from "@/styles/theme";
+import { useTheme } from "@emotion/react";
 import {
 	Download,
-	DownloadOutlined,
-	Email,
-	PersonAdd,
-	PointOfSale,
+	Paid,
+	Category,
 	Traffic,
-} from '@mui/icons-material';
-import { Box, Button, IconButton, Typography } from '@mui/material';
-import { mockTransactions } from '@/data/mockData';
-import ProgressCircle from '@/components/charts/ProgressCircle';
-import BarChart from '@/components/charts/BarChart';
-import { getRecords } from '@/lib/recordService';
-import categories from '@/public/categories';
-import { useAtom } from 'jotai';
-import { recordsAtom } from '@/state';
-import { useEffect } from 'react';
+	Receipt,
+} from "@mui/icons-material";
+import { Box, Button, Typography } from "@mui/material";
+import ProgressCircle from "@/components/charts/ProgressCircle";
+import BarChart from "@/components/charts/BarChart";
+import { getRecords } from "@/lib/recordService";
+import { useAtom } from "jotai";
+import { recordsAtom } from "@/state";
+import { useEffect, useState } from "react";
+import { tips } from "@/data/tips";
+import {
+	generateExpenditureDetails,
+	generateHighestExpense,
+	generatePast6MonthsDetails,
+	generateTopSpendingCategory,
+	generateTotalExpense,
+} from "@/lib/dashboardService";
 
 const Dashboard = () => {
 	const theme = useTheme();
 	const colors = tokens(theme.palette.mode);
 
 	const [records, setRecords] = useAtom(recordsAtom);
+	const [transactions, setTransactions] = useState(null);
+	const [totalSpent, setTotalSpent] = useState(0);
+	const [highestSingleExpense, setHighestSingleExpense] = useState(0);
+	const [topSpendingCategory, setTopSpendingCategory] = useState(null);
+	const [expenditureDetails, setExpenditureDetails] = useState(null);
+	const [past6MonthsDetails, setPast6MonthsDetails] = useState(null);
+	const [past6MonthsCat, setPast6MonthsCat] = useState(null);
+	const [randomTip, setRandomTip] = useState(null);
 
 	useEffect(() => {
+		//get records
 		readRecord();
+		//random tip
+		setRandomTip(tips[Math.floor(Math.random() * tips.length)]);
 	}, []);
+
+	useEffect(() => {
+		// total money spent
+		const totalSpent = generateTotalExpense(records);
+		setTotalSpent(totalSpent);
+
+		//highest single expense
+		const highestSingleExpense = generateHighestExpense(records);
+		setHighestSingleExpense(highestSingleExpense);
+
+		//Top spending category
+		const topSpendingCategory = generateTopSpendingCategory(records);
+		setTopSpendingCategory(topSpendingCategory);
+
+		//expenditure details
+		const details = generateExpenditureDetails(records);
+		setExpenditureDetails(details);
+
+		//past 6 months
+		const past6months = generatePast6MonthsDetails(records);
+		const past6monthsCat = [
+			...new Set(
+				past6months.flatMap((entry) =>
+					Object.keys(entry).filter((key) => key !== "month")
+				)
+			),
+		];
+		setPast6MonthsCat(past6monthsCat);
+		setPast6MonthsDetails(past6months);
+	}, [records]);
 
 	const readRecord = () => {
 		getRecords()
 			.then((data) => {
 				setRecords(data);
+				setTransactions(
+					data.sort((a, b) => new Date(b.date) - new Date(a.date))
+				);
 			})
 			.catch((err) => {
 				console.log(err);
-				throw new Error('Failed to find records.');
+				throw new Error("Failed to find records.");
 			});
 	};
-
-	const pieChartData = categories.map((category) => {
-		return {
-			id: category,
-			label: category,
-			value: 0,
-		};
-	});
-
-	records.forEach((record) => {
-		pieChartData.forEach((cat) => {
-			if (cat.id === record.category) cat.value += record.amount;
-		});
-	});
 
 	return (
 		<>
 			<DashboardLayout>
-				<Box m='10px 20px'>
+				<Box m="10px 20px">
 					<Box
-						display='flex'
-						justifyContent='space-between'
-						alignItems='center'
+						display="flex"
+						justifyContent="space-between"
+						alignItems="center"
 					>
-						<Header title='DASHBOARD' subtitle='Welcome to your dashboard' />
+						<Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 						<Box>
 							<Button
-								variant='contained'
+								variant="contained"
 								endIcon={<Download />}
 								onClick={() => {
 									setIsStartToScan(!isStartToScan);
 								}}
 								sx={{
 									backgroundColor: colors.orangeAccent[500],
-									'&:hover': {
+									"&:hover": {
 										backgroundColor: colors.orangeAccent[500],
 									},
 								}}
@@ -85,98 +120,98 @@ const Dashboard = () => {
 							</Button>
 						</Box>
 					</Box>
-					<Box m='20px 0 0 0' height='80vh' sx={{ overflow: 'auto' }}>
+					<Box m="20px 0 0 0" height="80vh" sx={{ overflow: "auto" }}>
 						{/* GRID & CHARTS */}
 						<Box
-							display='grid'
-							gridTemplateColumns='repeat(12, 1fr)'
-							gridAutoRows='7rem'
-							gap='1.5rem'
+							display="grid"
+							gridTemplateColumns="repeat(12, 1fr)"
+							gridAutoRows="7rem"
+							gap="1.5rem"
 						>
 							{/* ROW 1 */}
 							<Box
-								gridColumn='span 3'
+								gridColumn="span 3"
 								backgroundColor={colors.primary[200]}
-								display='flex'
-								alignItems='center'
-								justifyContent='center'
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
 							>
 								<StatBox
-									title='12,361'
-									subtitle='Emails Sent'
-									progress='0.75'
-									increase='+14%'
+									title={`$${totalSpent}`}
+									subtitle="Total Spent"
+									progress="0.75"
+									increase="+14%"
 									icon={
-										<Email
+										<Paid
 											sx={{
 												color: colors.greenAccent[400],
-												fontSize: '26px',
+												fontSize: "26px",
 											}}
 										/>
 									}
 								/>
 							</Box>
 							<Box
-								gridColumn='span 3'
+								gridColumn="span 3"
 								backgroundColor={colors.primary[200]}
-								display='flex'
-								alignItems='center'
-								justifyContent='center'
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
 							>
 								<StatBox
-									title='431,225'
-									subtitle='Sales Obtained'
-									progress='0.50'
-									increase='+21%'
+									title={`$${highestSingleExpense}`}
+									subtitle="Highest Single Expense"
+									progress="0.50"
+									increase="+21%"
 									icon={
-										<PointOfSale
+										<Receipt
 											sx={{
 												color: colors.greenAccent[400],
-												fontSize: '26px',
+												fontSize: "26px",
 											}}
 										/>
 									}
 								/>
 							</Box>
 							<Box
-								gridColumn='span 3'
+								gridColumn="span 3"
 								backgroundColor={colors.primary[200]}
-								display='flex'
-								alignItems='center'
-								justifyContent='center'
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
 							>
 								<StatBox
-									title='32,441'
-									subtitle='New Clients'
-									progress='0.30'
-									increase='+5%'
+									title={topSpendingCategory}
+									subtitle="Top Spending Category"
+									progress="0.30"
+									increase="+5%"
 									icon={
-										<PersonAdd
+										<Category
 											sx={{
 												color: colors.greenAccent[400],
-												fontSize: '26px',
+												fontSize: "26px",
 											}}
 										/>
 									}
 								/>
 							</Box>
 							<Box
-								gridColumn='span 3'
+								gridColumn="span 3"
 								backgroundColor={colors.primary[200]}
-								display='flex'
-								alignItems='center'
-								justifyContent='center'
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
 							>
 								<StatBox
-									title='1,325,134'
-									subtitle='Traffic Received'
-									progress='0.80'
-									increase='+43%'
+									title="$3,500"
+									subtitle="Monthly Budget"
+									progress="0.80"
+									increase="+43%"
 									icon={
 										<Traffic
 											sx={{
 												color: colors.greenAccent[400],
-												fontSize: '26px',
+												fontSize: "26px",
 											}}
 										/>
 									}
@@ -185,98 +220,88 @@ const Dashboard = () => {
 
 							{/* ROW 2 */}
 							<Box
-								gridColumn='span 8'
-								gridRow='span 2'
+								gridColumn="span 8"
+								gridRow="span 2"
 								backgroundColor={colors.primary[200]}
 							>
 								<Box
-									mt='15px'
-									p='0 30px'
-									display='flex'
-									justifyContent='space-between'
-									alignItems='center'
+									mt="15px"
+									p="0 30px"
+									display="flex"
+									justifyContent="space-between"
+									alignItems="center"
 								>
 									<Box>
 										<Typography
-											variant='h5'
-											fontWeight='600'
+											variant="h5"
+											fontWeight="600"
 											color={colors.grey[100]}
 										>
-											Revenue Generated
+											Last 3 Years with Expenditure Record Details
 										</Typography>
-										<Typography
-											variant='h3'
-											fontWeight='bold'
+										{/* <Typography
+											variant="h3"
+											fontWeight="bold"
 											color={colors.greenAccent[400]}
 										>
-											$59,342.32
-										</Typography>
-									</Box>
-									<Box>
-										<IconButton>
-											<DownloadOutlined
-												sx={{
-													fontSize: '26px',
-													color: colors.greenAccent[400],
-												}}
-											/>
-										</IconButton>
+											${totalSpent}
+										</Typography> */}
 									</Box>
 								</Box>
-								<Box height='240px' m='-2rem 0 0 0'>
-									<LineChart isDashboard={true} />
+								<Box height="240px" m="-2rem 0 0 0">
+									<LineChart isDashboard={true} data={expenditureDetails} />
 								</Box>
 							</Box>
 							<Box
-								gridColumn='span 4'
-								gridRow='span 2'
+								gridColumn="span 4"
+								gridRow="span 2"
 								backgroundColor={colors.primary[200]}
-								overflow='auto'
+								overflow="auto"
 							>
 								<Box
-									display='flex'
-									justifyContent='space-between'
-									alignItems='center'
+									display="flex"
+									justifyContent="space-between"
+									alignItems="center"
 									borderBottom={`4px solid ${colors.primary[500]}`}
 									colors={colors.grey[100]}
-									p='15px'
+									p="15px"
 								>
 									<Typography
 										color={colors.grey[100]}
-										variant='h5'
-										fontWeight='600'
+										variant="h5"
+										fontWeight="600"
 									>
 										Recent Transactions
 									</Typography>
 								</Box>
-								{mockTransactions.map((transaction, i) => (
+								{transactions?.map((transaction, i) => (
 									<Box
-										key={`${transaction.txId}-${i}`}
-										display='flex'
-										justifyContent='space-between'
-										alignItems='center'
+										key={`${transaction._id}`}
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
 										borderBottom={`4px solid ${colors.primary[500]}`}
-										p='15px'
+										p="15px"
 									>
 										<Box>
 											<Typography
 												color={colors.greenAccent[400]}
-												variant='h5'
-												fontWeight='600'
+												variant="h5"
+												fontWeight="600"
 											>
-												{transaction.txId}
+												{transaction.category}
 											</Typography>
 											<Typography color={colors.grey[100]}>
-												{transaction.user}
+												{transaction.merchant}
 											</Typography>
 										</Box>
 										<Box color={colors.grey[100]}>{transaction.date}</Box>
 										<Box
 											backgroundColor={colors.greenAccent[400]}
-											p='5px 10px'
-											borderRadius='4px'
+											p="5px 10px"
+											borderRadius="4px"
 										>
-											${transaction.cost}
+											${transaction.amount}
 										</Box>
 									</Box>
 								))}
@@ -284,84 +309,96 @@ const Dashboard = () => {
 
 							{/* ROW 3 */}
 							<Box
-								gridColumn='span 4'
-								gridRow='span 2'
+								gridColumn="span 4"
+								gridRow="span 2"
 								backgroundColor={colors.primary[200]}
-								p='15px'
+								p="15px"
 							>
-								<Typography variant='h5' fontWeight='600'>
+								<Typography variant="h5" fontWeight="600">
 									Health Score
 								</Typography>
 								<Box
-									display='flex'
-									flexDirection='row'
-									justifyContent='center'
-									alignItems='center'
-									sx={{ m: '1rem' }}
+									display="flex"
+									flexDirection="row"
+									justifyContent="center"
+									alignItems="center"
+									sx={{ m: "1rem" }}
 								>
-									<Box sx={{ position: 'relative' }}>
-										<ProgressCircle size='125' />
+									<Box sx={{ position: "relative" }}>
+										<ProgressCircle progress="0.87" size="125" />
 										<Typography
-											variant='h1'
-											fontWeight='bold'
+											variant="h1"
+											fontWeight="bold"
 											sx={{
-												position: 'absolute',
-												top: '50%',
-												left: '50%',
-												transform: 'translate(-50%, -50%)',
+												position: "absolute",
+												top: "50%",
+												left: "50%",
+												transform: "translate(-50%, -50%)",
 											}}
 										>
-											98
+											87
 										</Typography>
 									</Box>
-									<Box sx={{ width: 250, ml: '2rem' }}>
+									<Box sx={{ width: 250, ml: "2rem" }}>
 										<Typography
-											variant='h4'
-											fontWeight='bold'
+											variant="h4"
+											fontWeight="bold"
 											color={colors.greenAccent[400]}
-											sx={{ mb: '.5rem' }}
+											sx={{ mb: ".5rem" }}
 										>
 											Excellent
 										</Typography>
-										<Typography variant='h5'>
+										<Typography variant="h5">
 											Congratulations! Your remarkable income and minimal
-											expenses have led to financial success. Let&apos;s maintain and
-											expand your financial freedom.
+											expenses have led to financial success. Let&apos;s
+											maintain and expand your financial freedom.
 										</Typography>
 									</Box>
 								</Box>
 							</Box>
 							<Box
-								gridColumn='span 4'
-								gridRow='span 2'
+								gridColumn="span 4"
+								gridRow="span 2"
 								backgroundColor={colors.primary[200]}
 							>
 								<Typography
-									variant='h5'
-									fontWeight='600'
-									sx={{ padding: '15px 15px 0 15px' }}
+									variant="h5"
+									fontWeight="600"
+									sx={{ padding: "15px 15px 0 15px" }}
 								>
-									Sales Quantity
+									Past 6 Months
 								</Typography>
-								<Box height='250px' mt='-20px'>
-									<BarChart isDashboard={true} />
+								<Box height="250px" mt="-20px">
+									<BarChart
+										isDashboard={true}
+										data={past6MonthsDetails}
+										keys={past6MonthsCat}
+									/>
 								</Box>
 							</Box>
 							<Box
-								gridColumn='span 4'
-								gridRow='span 2'
+								gridColumn="span 4"
+								gridRow="span 2"
 								backgroundColor={colors.primary[200]}
-								p='15px'
+								p="15px"
 							>
 								<Typography
-									variant='h5'
-									fontWeight='600'
-									sx={{ marginBottom: '15px' }}
+									variant="h5"
+									fontWeight="600"
+									sx={{ marginBottom: "15px" }}
 								>
-									Geography Based Traffic
+									Financial Advice and Tips
 								</Typography>
-								<Box height='200px'>
-									{/* <GeographyChart isDashboard={true} /> */}
+								<Box height="200px">
+									<Typography
+										variant="h4"
+										fontWeight="bold"
+										color={colors.greenAccent[400]}
+										sx={{ mb: ".5rem" }}
+									>
+										Today&apos;s tips - {randomTip?.title}
+									</Typography>
+									<Typography variant="h5">{randomTip?.content}</Typography>
 								</Box>
 							</Box>
 						</Box>
